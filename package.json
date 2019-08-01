@@ -1,0 +1,23 @@
+{
+  "name": "dapplinkedin",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/equalithonteam13/DappLinkedIn.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/equalithonteam13/DappLinkedIn/issues"
+  },
+  "homepage": "https://github.com/equalithonteam13/DappLinkedIn#readme",
+  "devDependencies": {
+    "truffle": "^5.0.30",
+    "truffle-hdwallet-provider": "^1.0.15"
+  }
+}
