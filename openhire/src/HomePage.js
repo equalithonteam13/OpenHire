@@ -1,5 +1,5 @@
 import React from 'react';
-import { Loader, Button } from 'semantic-ui-react';
+import SignupForm from './SignupForm';
 
 export default class HomePage extends React.Component {
   constructor(props, context) {
@@ -8,11 +8,12 @@ export default class HomePage extends React.Component {
     this.state = {};
   }
   render() {
-    console.log(this.drizzleState, this.props);
-    console.log(Loader);
+    const { drizzle, drizzleState } = this.props;
+
     return (
       <div>
         <h1>Hello!</h1>
+        <SignupForm drizzle={drizzle} drizzleState={drizzleState} />
       </div>
     );
   }
