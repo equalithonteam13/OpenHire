@@ -3,10 +3,22 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import { Drizzle } from 'drizzle';
+import { DrizzleContext } from 'drizzle-react';
+import './App.css';
+import Migrations from './contracts/Migrations.json';
+import OpenHire from './contracts/OpenHire';
+import store from './middleware';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+const options = { contracts: [Migrations, OpenHire] };
+const drizzle = new Drizzle(options, store);
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
+ReactDOM.render(
+  <DrizzleContext.Provider drizzle={drizzle}>
+    <App />
+  </DrizzleContext.Provider>,
+
+  document.getElementById('root')
+);
+
 serviceWorker.unregister();
