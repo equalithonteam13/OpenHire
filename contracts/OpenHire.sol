@@ -66,8 +66,8 @@ contract OpenHire is Administrator {
         allOrganizations[msg.sender] = newOrganization;
     }
 
-    function getOrganization(address searchAddress) public view returns (Organization memory){
-        return allOrganizations[searchAddress];
+    function getOrganization(address searchAddress) public view returns (string memory, string memory, bool){
+        return (allOrganizations[searchAddress].name, allOrganizations[searchAddress].emailAddress, allOrganizations[searchAddress].verified);
     }
 
     function verifyOrganization(address organizationAddress) public onlyAdmin {

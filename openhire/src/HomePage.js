@@ -1,5 +1,6 @@
 import React from 'react';
 import SignupForm from './SignupForm';
+import Navbar from './Navbar';
 
 export default class HomePage extends React.Component {
   constructor(props, context) {
@@ -12,7 +13,8 @@ export default class HomePage extends React.Component {
 
     return (
       <div>
-        <h1>Hello!</h1>
+        <Navbar drizzle={drizzle} drizzleState={drizzleState} />
+        <h1>OpenHire</h1>
         <SignupForm drizzle={drizzle} drizzleState={drizzleState} />
       </div>
     );
