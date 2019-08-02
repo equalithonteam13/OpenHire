@@ -9,6 +9,7 @@ export default class Browse extends React.Component {
       currentSkill: "",
       skillsToSearch: [],
       searchResult: [],
+      numberOfSearches: 0,
       loading: false,
       errorMessage: ""
     };
@@ -21,9 +22,15 @@ export default class Browse extends React.Component {
     let users = [];
     while (loop) {
       try {
-        let user = await drizzle.contracts.OpenHire.methods
+        let userAddress = await drizzle.contracts.OpenHire.methods
           .allUserAddresses(index)
           .call();
+        let user = await drizzle.contracts.OpenHire.methods
+          .getUserData(userAddress)
+          .call();
+        if (index % 2 === 0) {
+          user[2] = ["javascript", "python"];
+        }
         users.push(user);
         index++;
       } catch (error) {
@@ -33,7 +40,7 @@ export default class Browse extends React.Component {
 
     this.setState({ allUsers: users });
 
-    console.log("user ", users);
+    console.log("users ", users);
   }
 
   handleOnChange = event => {
@@ -45,16 +52,12 @@ export default class Browse extends React.Component {
   handleOnSubmit = async event => {
     event.preventDefault();
 
-    const { drizzle } = this.props;
     const { allUsers, skillsToSearch } = this.state;
 
     let results = [];
 
     for (let i = 0; i < allUsers.length; i++) {
-      let user = await drizzle.contracts.OpenHire.methods
-        .getUserData(allUsers[i])
-        .call();
-      const userSkills = user[2];
+      const userSkills = allUsers[i][2];
       for (let j = 0; j < skillsToSearch.length; j++) {
         //if current user being checked does not have skill,
         if (!userSkills.includes(skillsToSearch[j])) {
@@ -62,16 +65,18 @@ export default class Browse extends React.Component {
         }
         //if current user contains all skills that is being searched, add user to results array
         if (j === skillsToSearch.length - 1) {
-          results.push(user);
+          results.push(allUsers[i]);
         }
       }
-      //delete once ability to add skills has been implemented
-      results.push(user);
     }
 
     console.log("results ", results);
-
-    this.setState({ searchResult: results });
+    const numberOfSearches = this.state.numberOfSearches + 1;
+    this.setState({
+      numberOfSearches: numberOfSearches,
+      searchResult: results,
+      skillsToSearch: []
+    });
   };
 
   addSkillToSearch = () => {
@@ -84,7 +89,12 @@ export default class Browse extends React.Component {
   };
 
   render() {
-    const { skillsToSearch, searchResult } = this.state;
+    const {
+      skillsToSearch,
+      searchResult,
+      allUsers,
+      numberOfSearches
+    } = this.state;
     return (
       <div>
         <Form onSubmit={this.handleOnSubmit}>
@@ -109,18 +119,27 @@ export default class Browse extends React.Component {
             disabled={this.state.loading}
             loading={this.state.loading}
           >
-            Submit
+            Search
           </Button>
         </Form>
 
-        {searchResult.map((user, index) => {
-          return (
-            <div key={index}>
-              {" "}
-              Name: {user[0]} Email: {user[1]}{" "}
-            </div>
-          );
-        })}
+        {numberOfSearches === 0
+          ? allUsers.map((user, index) => {
+              return (
+                <div key={index}>
+                  {" "}
+                  Name: {user[0]} Email: {user[1]}{" "}
+                </div>
+              );
+            })
+          : searchResult.map((user, index) => {
+              return (
+                <div key={index}>
+                  {" "}
+                  Name: {user[0]} Email: {user[1]}{" "}
+                </div>
+              );
+            })}
       </div>
     );
   }
