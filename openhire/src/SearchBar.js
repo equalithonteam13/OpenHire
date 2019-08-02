@@ -3,8 +3,21 @@ import React, { Component } from 'react';
 import { Search, Grid } from 'semantic-ui-react';
 
 const initialState = { isLoading: false, results: [], value: '' };
+const noResults = [{ title: 'No results found.' }];
+const organizationNoResults = {
+  organization: {
+    name: 'Organization',
+    results: noResults,
+  },
+};
+const userNoResults = {
+  user: {
+    name: 'User',
+    results: noResults,
+  },
+};
 
-export default class SearchExampleStandard extends Component {
+export default class SearchBar extends Component {
   state = initialState;
 
   handleResultSelect = (e, { result }) =>
@@ -17,21 +30,67 @@ export default class SearchExampleStandard extends Component {
       if (this.state.value.length < 1) return this.setState(initialState);
 
       if (this.state.value.length === 42) {
-        const data = await this.fetchData(value);
+        const organizationData = await this.fetchOrganizationData(value);
+        const userData = await this.fetchUserData(value);
         let formattedData = '';
-        if (data) formattedData = [{ title: data[0], description: data[1] }];
+        if (organizationData) {
+          formattedData = {
+            organization: {
+              name: 'Organization',
+              results: [
+                {
+                  title: organizationData[0],
+                  description: organizationData[1],
+                },
+              ],
+            },
+            ...userNoResults,
+          };
+        } else if (userData) {
+          formattedData = {
+            ...organizationNoResults,
+            user: {
+              name: 'User',
+              results: [
+                {
+                  title: userData[0],
+                  description: userData[1],
+                },
+              ],
+            },
+          };
+        }
         this.setState({
           isLoading: false,
-          results: formattedData,
+          results: formattedData || {
+            ...organizationNoResults,
+            ...userNoResults,
+          },
         });
       }
     }, 300);
   };
 
-  fetchData = address => {
-    return this.props.drizzle.contracts.OpenHire.methods
-      .getOrganization(address)
-      .call();
+  fetchOrganizationData = async address => {
+    let data;
+    try {
+      data = await this.props.drizzle.contracts.OpenHire.methods
+        .getOrganization(address)
+        .call();
+      if (data[0] === '' || data === undefined) return undefined;
+      return data;
+    } catch (error) {}
+  };
+
+  fetchUserData = async address => {
+    let data;
+    try {
+      data = await this.props.drizzle.contracts.OpenHire.methods
+        .getUserData(address)
+        .call();
+      if (data[0] === '' || data === undefined) return undefined;
+      return data;
+    } catch (error) {}
   };
 
   render() {
@@ -40,6 +99,7 @@ export default class SearchExampleStandard extends Component {
       <Grid>
         <Grid.Column width={6}>
           <Search
+            category
             loading={isLoading}
             onResultSelect={this.handleResultSelect}
             onSearchChange={_.debounce(this.handleSearchChange, 500, {

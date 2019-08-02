@@ -1,5 +1,4 @@
 pragma solidity ^0.5.8;
-pragma experimental ABIEncoderV2;
 
 contract Administrator {
     address private adminAddress;
@@ -113,8 +112,12 @@ contract OpenHire is Administrator {
         allUsers[endorseeAddress].skillsList[index].endorsers.push(msg.sender);
     }
 
-    function getUserData(address userAddress) public view returns (string memory, string memory, address[] memory, Skill[] memory) {
-        return (allUsers[userAddress].name, allUsers[userAddress].emailAddress, allUsers[userAddress].experienceKeys, allUsers[userAddress].skillsList);
+    function getUserData(address userAddress) public view returns (string memory, string memory, address[] memory) {
+        return (allUsers[userAddress].name, allUsers[userAddress].emailAddress, allUsers[userAddress].experienceKeys);
+    }
+
+    function getUserSkillData(address userAddress, uint skillIndex) public view returns (string memory, address[] memory) {
+        return (allUsers[userAddress].skillsList[skillIndex].name,allUsers[userAddress].skillsList[skillIndex].endorsers);
     }
 
     function getExperience(address userAddress, address organizationAddress) public view returns (string memory, string memory, uint, bool) {
