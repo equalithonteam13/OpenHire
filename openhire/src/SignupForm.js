@@ -1,13 +1,25 @@
 import React, { Component } from 'react';
+import { toast, Flip } from 'react-toastify';
 import { Button, Form, Input, Checkbox, Label, Icon } from 'semantic-ui-react';
 
 export default class SignupForm extends Component {
   constructor() {
     super();
     this.state = {
+      currentAddress: '',
       name: '',
       email: '',
+      organizationForm: false,
+      loading: false,
+      errorMessage: '',
     };
+  }
+
+  async componentDidMount() {
+    const currentAddress = await this.props.drizzle.web3.eth.getAccounts();
+    this.setState({
+      currentAddress: currentAddress[0],
+    });
   }
 
   handleInputChange = event => {
@@ -16,18 +28,67 @@ export default class SignupForm extends Component {
     });
   };
 
+  handleSubmit = async event => {
+    event.preventDefault();
+    this.setState({ loading: true });
+
+    toast.info('Processing sign up...', {
+      position: 'top-right',
+      autoClose: 10000,
+      transition: Flip,
+    });
+    try {
+      if (this.state.organizationForm) {
+        await this.props.drizzle.contracts.OpenHire.methods
+          .createOrganization(this.state.name, this.state.email)
+          .send({ from: this.state.currentAddress });
+      } else {
+        await this.props.drizzle.contracts.OpenHire.methods
+          .createUser(this.state.name, this.state.email)
+          .send({ from: this.state.currentAddress });
+      }
+      this.setState({ errorMessage: '' });
+    } catch (error) {
+      toast.dismiss();
+      this.setState({ errorMessage: error.message });
+    }
+    this.setState({ loading: false, name: '', email: '' });
+  };
+
+  toggleForm = option => {
+    if (option !== undefined) {
+      this.setState({ organizationForm: option });
+    } else {
+      this.setState(prevState => ({
+        organizationForm: !prevState.organizationForm,
+      }));
+    }
+  };
+
   render() {
-    console.log(this.props);
     return (
       <div>
         <h1>Form</h1>
-        <Form>
-          <Label as="a" image>
+        <Form onSubmit={this.handleSubmit}>
+          <Label
+            as="a"
+            image
+            onClick={() => this.toggleForm(false)}
+            color={this.state.organizationForm ? 'grey' : 'blue'}
+          >
             <Icon name="address book" />
             User
           </Label>
-          <Checkbox toggle />
-          <Label>
+          <Checkbox
+            toggle
+            checked={this.state.organizationForm}
+            onClick={() => this.toggleForm()}
+          />
+          <Label
+            as="a"
+            onClick={() => this.toggleForm(true)}
+            color={this.state.organizationForm ? 'blue' : 'grey'}
+          >
             <Icon name="building" />
             Organization
           </Label>
@@ -46,7 +107,13 @@ export default class SignupForm extends Component {
             type="email"
             onChange={this.handleInputChange}
           />
-          <Button type="submit">Submit</Button>
+          <Button
+            type="submit"
+            disabled={this.state.loading}
+            loading={this.state.loading}
+          >
+            Submit
+          </Button>
         </Form>
       </div>
     );
