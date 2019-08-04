@@ -1,30 +1,30 @@
-import React, { Component } from 'react';
-import { toast, Flip } from 'react-toastify';
-import { Button, Form, Input, Checkbox, Label, Icon } from 'semantic-ui-react';
+import React, { Component } from "react";
+import { toast, Flip } from "react-toastify";
+import { Button, Form, Input, Checkbox, Label, Icon } from "semantic-ui-react";
 
 export default class SignupForm extends Component {
   constructor() {
     super();
     this.state = {
-      currentAddress: '',
-      name: '',
-      email: '',
+      currentAddress: "",
+      name: "",
+      email: "",
       organizationForm: false,
       loading: false,
-      errorMessage: '',
+      errorMessage: ""
     };
   }
 
   async componentDidMount() {
     const currentAddress = await this.props.drizzle.web3.eth.getAccounts();
     this.setState({
-      currentAddress: currentAddress[0],
+      currentAddress: currentAddress[0]
     });
   }
 
   handleInputChange = event => {
     this.setState({
-      [event.target.name]: event.target.value,
+      [event.target.name]: event.target.value
     });
   };
 
@@ -32,10 +32,10 @@ export default class SignupForm extends Component {
     event.preventDefault();
     this.setState({ loading: true });
 
-    toast.info('Processing sign up...', {
-      position: 'top-right',
+    toast.info("Processing sign up...", {
+      position: "top-right",
       autoClose: 10000,
-      transition: Flip,
+      transition: Flip
     });
     try {
       if (this.state.organizationForm) {
@@ -47,12 +47,12 @@ export default class SignupForm extends Component {
           .createUser(this.state.name, this.state.email)
           .send({ from: this.state.currentAddress });
       }
-      this.setState({ errorMessage: '' });
+      this.setState({ errorMessage: "" });
     } catch (error) {
       toast.dismiss();
       this.setState({ errorMessage: error.message });
     }
-    this.setState({ loading: false, name: '', email: '' });
+    this.setState({ loading: false, name: "", email: "" });
   };
 
   toggleForm = option => {
@@ -60,7 +60,7 @@ export default class SignupForm extends Component {
       this.setState({ organizationForm: option });
     } else {
       this.setState(prevState => ({
-        organizationForm: !prevState.organizationForm,
+        organizationForm: !prevState.organizationForm
       }));
     }
   };
@@ -74,7 +74,7 @@ export default class SignupForm extends Component {
             as="a"
             image
             onClick={() => this.toggleForm(false)}
-            color={this.state.organizationForm ? 'grey' : 'blue'}
+            color={this.state.organizationForm ? "grey" : "blue"}
           >
             <Icon name="address book" />
             User
@@ -87,7 +87,7 @@ export default class SignupForm extends Component {
           <Label
             as="a"
             onClick={() => this.toggleForm(true)}
-            color={this.state.organizationForm ? 'blue' : 'grey'}
+            color={this.state.organizationForm ? "blue" : "grey"}
           >
             <Icon name="building" />
             Organization
