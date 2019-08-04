@@ -40,7 +40,7 @@ contract OpenHire is Administrator {
 
         //Can have either array of structs or mapping skill name to array + array with keys
         Skill[] skillsList;
-
+        uint skillsListLength;
     }
 
     struct Experience {
@@ -106,6 +106,11 @@ contract OpenHire is Administrator {
             endorsers: new address[](0)
         });
         allUsers[msg.sender].skillsList.push(newSkill);
+        allUsers[msg.sender].skillsListLength++;
+    }
+
+    function getSkillListLength(address userAddress) public view returns (uint) {
+        return allUsers[userAddress].skillsListLength;
     }
 
     function endorseSkill(address endorseeAddress, uint index) public {
