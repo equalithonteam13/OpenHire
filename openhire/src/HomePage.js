@@ -1,15 +1,19 @@
-import React from "react";
 import SignupForm from "./SignupForm";
 import Navbar from "./Navbar";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { Route, Switch } from "react-router-dom";
 import Browse from "./Browse";
 
-export default class HomePage extends React.Component {
+import React, { Component } from 'react';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+import SignupForm from './SignupForm';
+import Navbar from './Navbar';
+import SingleUserView from './SingleUserView';
+
+export default class HomePage extends Component {
   constructor(props, context) {
     super();
-    this.drizzleState = context.drizzle;
     this.state = {};
   }
 
@@ -37,6 +41,12 @@ export default class HomePage extends React.Component {
             }}
           />
         </Switch>
+
+        <SingleUserView
+          drizzle={drizzle}
+          drizzleState={drizzleState}
+          pageAddress={'0xbEd2567a6888cc3AD176BaF0891b64337729AD97'}
+        />
       </div>
     );
   }
