@@ -6,11 +6,9 @@ import Browse from './Browse';
 import React, { Component } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import OrgProfileComponent from './OrganizationComponents/OrgProfileComponent';
 
-import SingleUserView from './UserComponents/SingleUserView';
 import OrgProfileComponent from './OrganizationComponents/OrgProfileComponent';
+import SingleUserView from './UserComponents/SingleUserView';
 
 export default class HomePage extends Component {
   constructor() {
