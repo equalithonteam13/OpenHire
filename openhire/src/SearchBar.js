@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import { Search, Grid } from 'semantic-ui-react';
+import { withRouter } from 'react-router-dom';
 
 const initialState = { isLoading: false, results: [], value: '' };
 const noResults = [{ title: 'No results found.' }];
@@ -17,11 +18,12 @@ const userNoResults = {
   },
 };
 
-export default class SearchBar extends Component {
+class SearchBar extends Component {
   state = initialState;
 
-  handleResultSelect = (e, { result }) =>
+  handleResultSelect = (e, { result }) => {
     this.setState({ value: result.title });
+  };
 
   handleSearchChange = (e, { value }) => {
     this.setState({ isLoading: true, value });
@@ -101,7 +103,12 @@ export default class SearchBar extends Component {
           <Search
             category
             loading={isLoading}
-            onResultSelect={this.handleResultSelect}
+            onResultSelect={(event, data) => {
+              if (data.result.title !== 'No results found.') {
+                this.props.history.push(`/profile/${this.state.value}`);
+              }
+              return this.handleResultSelect;
+            }}
             onSearchChange={_.debounce(this.handleSearchChange, 500, {
               leading: true,
             })}
@@ -113,3 +120,5 @@ export default class SearchBar extends Component {
     );
   }
 }
+
+export default withRouter(SearchBar);

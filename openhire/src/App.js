@@ -1,7 +1,8 @@
-import React from 'react';
-import { DrizzleContext } from 'drizzle-react';
-import HomePage from './HomePage';
-import { Loader } from 'semantic-ui-react';
+import React from "react";
+import { DrizzleContext } from "drizzle-react";
+import HomePage from "./HomePage";
+import { Switch, Route } from "react-router-dom";
+import { Loader } from "semantic-ui-react";
 
 export default () => (
   <DrizzleContext.Consumer>
@@ -12,9 +13,9 @@ export default () => (
         return (
           <div
             style={{
-              display: 'flex',
-              alignItems: 'center',
-              flexDirection: 'column',
+              display: "flex",
+              alignItems: "center",
+              flexDirection: "column"
             }}
           >
             <h1>Loading...</h1>
