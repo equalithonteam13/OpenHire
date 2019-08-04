@@ -115,6 +115,7 @@ export default class Skills extends Component {
         <h2>
           Skills{' '}
           <Icon
+            link
             name="plus"
             onClick={() =>
               this.setState({ displaySkillForm: !displaySkillForm })
@@ -166,8 +167,8 @@ export default class Skills extends Component {
                   />
                   <Modal.Content>
                     <div>Endorsers</div>
-                    {skill[1].map(address => {
-                      return <div>{address}</div>;
+                    {skill[1].map((address, index) => {
+                      return <div key={index}>{address}</div>;
                     })}
                   </Modal.Content>
                   <Modal.Actions>

@@ -1,27 +1,39 @@
 import React, { Component } from 'react';
 import { Menu } from 'semantic-ui-react';
 import SearchBar from './SearchBar';
+import { withRouter } from 'react-router-dom';
 
-export default class NavBar extends Component {
-  state = { activeItem: 'home' };
+class NavBar extends Component {
+  constructor() {
+    super();
+    this.state = { activeItem: 'home' };
+  }
 
   handleItemClick = (e, { name }) => this.setState({ activeItem: name });
 
   render() {
     const { activeItem } = this.state;
     const { drizzle, drizzleState } = this.props;
+
     return (
       <Menu>
         <Menu.Item
           name="home"
           active={activeItem === 'home'}
-          onClick={this.handleItemClick}
+          onClick={() => {
+            this.props.history.push('/');
+            return this.handleItemClick;
+          }}
         />
         <Menu.Item
-          name="button2"
+          name="Browse"
           active={activeItem === 'button2'}
-          onClick={this.handleItemClick}
+          onClick={() => {
+            this.props.history.push('/browse');
+            return this.handleItemClick;
+          }}
         />
+
         <Menu.Item
           name="button3"
           active={activeItem === 'button3'}
@@ -36,3 +48,5 @@ export default class NavBar extends Component {
     );
   }
 }
+
+export default withRouter(NavBar);

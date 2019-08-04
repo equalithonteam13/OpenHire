@@ -1,14 +1,12 @@
-import SignupForm from "./SignupForm";
-import Navbar from "./Navbar";
-import { Route, Switch } from "react-router-dom";
-import Browse from "./Browse";
+import SignupForm from './SignupForm';
+import Navbar from './Navbar';
+import { Route, Switch } from 'react-router-dom';
+import Browse from './Browse';
 
 import React, { Component } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import SignupForm from './SignupForm';
-import Navbar from './Navbar';
 import SingleUserView from './SingleUserView';
 
 export default class HomePage extends Component {
