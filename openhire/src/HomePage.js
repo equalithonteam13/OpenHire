@@ -10,7 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import SingleUserView from './SingleUserView';
 
 export default class HomePage extends Component {
-  constructor(props, context) {
+  constructor() {
     super();
     this.state = {};
   }
@@ -23,7 +23,6 @@ export default class HomePage extends Component {
         <ToastContainer />
         <Navbar drizzle={drizzle} drizzleState={drizzleState} />
         <h1>OpenHire</h1>
-        <SignupForm drizzle={drizzle} drizzleState={drizzleState} />
         <Switch>
           <Route
             exact
@@ -38,13 +37,29 @@ export default class HomePage extends Component {
               );
             }}
           />
+          <Route
+            exact
+            path="/signup"
+            render={() => {
+              return (
+                <SignupForm drizzle={drizzle} drizzleState={drizzleState} />
+              );
+            }}
+          />
+          <Route
+            exact
+            path="/profile/:address"
+            render={props => {
+              return (
+                <SingleUserView
+                  drizzle={drizzle}
+                  drizzleState={drizzleState}
+                  props={props}
+                />
+              );
+            }}
+          />
         </Switch>
-
-        <SingleUserView
-          drizzle={drizzle}
-          drizzleState={drizzleState}
-          pageAddress={'0xbEd2567a6888cc3AD176BaF0891b64337729AD97'}
-        />
       </div>
     );
   }

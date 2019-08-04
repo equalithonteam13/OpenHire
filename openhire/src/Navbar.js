@@ -35,9 +35,12 @@ class NavBar extends Component {
         />
 
         <Menu.Item
-          name="button3"
+          name="Sign Up"
           active={activeItem === 'button3'}
-          onClick={this.handleItemClick}
+          onClick={() => {
+            this.props.history.push('/signup');
+            return this.handleItemClick;
+          }}
         />
         <Menu.Menu position="right">
           <Menu.Item>

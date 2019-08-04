@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Skills from './Skills';
-// import { Button, Form, Input, Icon, Menu, Label } from 'semantic-ui-react';
 
 export default class SingleUserView extends Component {
   constructor() {
@@ -18,7 +17,8 @@ export default class SingleUserView extends Component {
   }
 
   async componentDidMount() {
-    const { drizzle, pageAddress } = this.props;
+    const pageAddress = this.props.props.match.params.address;
+    const { drizzle } = this.props;
     const userAddress = (await drizzle.web3.eth.getAccounts())[0];
     this.setState({ userAddress: userAddress });
     let ownPage = false;
@@ -51,8 +51,8 @@ export default class SingleUserView extends Component {
       skills,
     } = this.state;
 
-    const { drizzle, drizzleState, pageAddress } = this.props;
-
+    const { drizzle, drizzleState } = this.props;
+    const pageAddress = this.props.props.match.params.address;
     // console.log(this.state);
     return (
       <div>
