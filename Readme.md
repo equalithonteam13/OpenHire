@@ -21,4 +21,4 @@ OpenHire
 
 9. Change metamask network to localhost 8545
 
-10. "npm run start" in App folder
+10. "npm run start" in openhire folder
