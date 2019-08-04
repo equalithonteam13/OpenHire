@@ -18,6 +18,7 @@ export default class Skills extends Component {
     this.state = {
       userAddress: '',
       pageAddress: props.pageAddress,
+      ownPage: false,
       displaySkillForm: false,
       skillsArray: [],
       skillsCount: 0,
@@ -28,7 +29,13 @@ export default class Skills extends Component {
 
   componentDidMount = async () => {
     const userAddress = (await this.props.drizzle.web3.eth.getAccounts())[0];
-    this.setState({ userAddress: userAddress });
+
+    let ownPage = false;
+    if (userAddress === this.props.pageAddress) {
+      ownPage = true;
+    }
+
+    this.setState({ userAddress, ownPage });
     this.getSkillCount();
   };
 
@@ -85,15 +92,16 @@ export default class Skills extends Component {
   };
 
   fetchSkillData = async skillsCount => {
-    const skillsArray = [];
-    for (let i = 0; i < skillsCount; i++) {
-      let skillData = await this.props.drizzle.contracts.OpenHire.methods
-        .getUserSkillData(this.state.userAddress, i)
-        .call();
-      skillsArray.push(skillData);
-    }
+    if (skillsCount !== this.state.skillsArray.length) {
+      const skillsArray = [];
 
-    if (skillsArray.length !== this.state.skillsArray.length) {
+      for (let i = 0; i < skillsCount; i++) {
+        let skillData = await this.props.drizzle.contracts.OpenHire.methods
+          .getUserSkillData(this.state.userAddress, i)
+          .call();
+        skillsArray.push(skillData);
+      }
+
       this.setState({ skillsArray });
     }
   };
@@ -105,22 +113,24 @@ export default class Skills extends Component {
   };
 
   render() {
-    const { displaySkillForm, skillsArray } = this.state;
+    const { displaySkillForm, skillsArray, ownPage } = this.state;
     const skillsCount = this.updateSkillCount();
     this.fetchSkillData(skillsCount);
-
-    // console.log(this.state);
     return (
       <div>
         <h2>
           Skills{' '}
-          <Icon
-            link
-            name="plus"
-            onClick={() =>
-              this.setState({ displaySkillForm: !displaySkillForm })
-            }
-          />
+          {ownPage ? (
+            <Icon
+              link
+              name="plus"
+              onClick={() =>
+                this.setState({ displaySkillForm: !displaySkillForm })
+              }
+            />
+          ) : (
+            ''
+          )}
         </h2>
 
         {displaySkillForm ? (
