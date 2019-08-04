@@ -104,9 +104,18 @@ class SearchBar extends Component {
             category
             loading={isLoading}
             onResultSelect={(event, data) => {
-              if (data.result.title !== 'No results found.') {
-                this.props.history.push(`/profile/${this.state.value}`);
+              const user = data.results.user.results[0].title;
+              const organization = data.results.organization.results[0].title;
+              const noResults = 'No results found.';
+
+              if (data.result.title !== noResults) {
+                if (user === noResults) {
+                  this.props.history.push(`/organization/${this.state.value}`);
+                } else if (organization === noResults) {
+                  this.props.history.push(`/user/${this.state.value}`);
+                }
               }
+
               return this.handleResultSelect;
             }}
             onSearchChange={_.debounce(this.handleSearchChange, 500, {

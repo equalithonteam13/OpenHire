@@ -9,7 +9,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import OrgProfileComponent from './OrganizationComponents/OrgProfileComponent';
 
-import SingleUserView from './SingleUserView';
+import SingleUserView from './UserComponents/SingleUserView';
+import OrgProfileComponent from './OrganizationComponents/OrgProfileComponent';
 
 export default class HomePage extends Component {
   constructor() {
@@ -50,7 +51,7 @@ export default class HomePage extends Component {
           />
           <Route
             exact
-            path="/profile/:address"
+            path="/user/:address"
             render={props => {
               return (
                 <SingleUserView
@@ -61,6 +62,20 @@ export default class HomePage extends Component {
               );
             }}
           />
+          <Route
+            exact
+            path="/organization/:address"
+            render={props => (
+              <OrgProfileComponent
+                {...props}
+                drizzle={drizzle}
+                drizzleState={drizzleState}
+              />
+            )}
+          />
+
+          {/* <Route exact path='/organization/:address' component={OrgProfileComponent} drizzle={drizzle} drizzleState={drizzleState}></Route> */}
+          {/* <Route path='*' render={<h4>No Route Found!</h4>}></Route> */}
         </Switch>
       </div>
     );
