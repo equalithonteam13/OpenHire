@@ -20,17 +20,32 @@ export default class Browse extends React.Component {
     let loop = true;
     let index = 0;
     let users = [];
+    //loop through ALL users in our app
     while (loop) {
       try {
+        //get userAddress at the current index
         let userAddress = await drizzle.contracts.OpenHire.methods
           .allUserAddresses(index)
           .call();
+        //fetch user at current address
         let user = await drizzle.contracts.OpenHire.methods
           .getUserData(userAddress)
           .call();
-        if (index % 2 === 0) {
-          user[2] = ["javascript", "python"];
+        //number of skills current user has
+        const skillLength = await drizzle.contracts.OpenHire.methods
+          .getSkillListLength(userAddress)
+          .call();
+        let userSkills = [];
+        //get all the skills this user has
+        for (let i = 0; i < skillLength; i++) {
+          let skill = await drizzle.contracts.OpenHire.methods
+            .getUserSkillData(userAddress, i)
+            .call();
+          //store only the name of the skill in userSkills array
+          userSkills.push(skill[0]);
         }
+        //attach all of userSkills to user object
+        user[3] = userSkills;
         users.push(user);
         index++;
       } catch (error) {
@@ -39,8 +54,6 @@ export default class Browse extends React.Component {
     }
 
     this.setState({ allUsers: users });
-
-    console.log("users ", users);
   }
 
   handleOnChange = event => {
@@ -57,7 +70,7 @@ export default class Browse extends React.Component {
     let results = [];
 
     for (let i = 0; i < allUsers.length; i++) {
-      const userSkills = allUsers[i][2];
+      const userSkills = allUsers[i][3];
       for (let j = 0; j < skillsToSearch.length; j++) {
         //if current user being checked does not have skill,
         if (!userSkills.includes(skillsToSearch[j])) {
@@ -70,7 +83,6 @@ export default class Browse extends React.Component {
       }
     }
 
-    console.log("results ", results);
     const numberOfSearches = this.state.numberOfSearches + 1;
     this.setState({
       numberOfSearches: numberOfSearches,
@@ -97,6 +109,7 @@ export default class Browse extends React.Component {
     } = this.state;
     return (
       <div>
+        <h1> BROWSE </h1>
         <Form onSubmit={this.handleOnSubmit}>
           <Input
             key="currentSkill"
