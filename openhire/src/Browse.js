@@ -1,17 +1,18 @@
-import React from "react";
-import { Button, Form, Input, Checkbox, Label, Icon } from "semantic-ui-react";
+import React from 'react';
+import { Button, Form, Input } from 'semantic-ui-react';
+// Checkbox, Label, Icon
 
 export default class Browse extends React.Component {
   constructor() {
     super();
     this.state = {
       allUsers: [],
-      currentSkill: "",
+      currentSkill: '',
       skillsToSearch: [],
       searchResult: [],
       numberOfSearches: 0,
       loading: false,
-      errorMessage: ""
+      errorMessage: '',
     };
   }
 
@@ -58,7 +59,7 @@ export default class Browse extends React.Component {
 
   handleOnChange = event => {
     this.setState({
-      [event.target.name]: event.target.value
+      [event.target.name]: event.target.value,
     });
   };
 
@@ -87,7 +88,7 @@ export default class Browse extends React.Component {
     this.setState({
       numberOfSearches: numberOfSearches,
       searchResult: results,
-      skillsToSearch: []
+      skillsToSearch: [],
     });
   };
 
@@ -95,8 +96,8 @@ export default class Browse extends React.Component {
     let skillsToSearch = this.state.skillsToSearch;
     skillsToSearch.push(this.state.currentSkill);
     this.setState({
-      currentSkill: "",
-      skillsToSearch: skillsToSearch
+      currentSkill: '',
+      skillsToSearch: skillsToSearch,
     });
   };
 
@@ -105,7 +106,7 @@ export default class Browse extends React.Component {
       skillsToSearch,
       searchResult,
       allUsers,
-      numberOfSearches
+      numberOfSearches,
     } = this.state;
     return (
       <div>
@@ -140,16 +141,16 @@ export default class Browse extends React.Component {
           ? allUsers.map((user, index) => {
               return (
                 <div key={index}>
-                  {" "}
-                  Name: {user[0]} Email: {user[1]}{" "}
+                  {' '}
+                  Name: {user[0]} Email: {user[1]}{' '}
                 </div>
               );
             })
           : searchResult.map((user, index) => {
               return (
                 <div key={index}>
-                  {" "}
-                  Name: {user[0]} Email: {user[1]}{" "}
+                  {' '}
+                  Name: {user[0]} Email: {user[1]}{' '}
                 </div>
               );
             })}
