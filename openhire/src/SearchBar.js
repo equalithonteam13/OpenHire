@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
-import { Search, Grid } from 'semantic-ui-react';
+import { Search } from 'semantic-ui-react';
 import { withRouter } from 'react-router-dom';
 
 const initialState = { isLoading: false, results: [], value: '' };
@@ -98,35 +98,31 @@ class SearchBar extends Component {
   render() {
     const { isLoading, value, results } = this.state;
     return (
-      <Grid>
-        <Grid.Column width={6}>
-          <Search
-            category
-            placeholder="Address"
-            loading={isLoading}
-            onResultSelect={(event, data) => {
-              const user = data.results.user.results[0].title;
-              const organization = data.results.organization.results[0].title;
-              const noResults = 'No results found.';
+      <Search
+        category
+        placeholder={this.props.placeholder || 'Address'}
+        loading={isLoading}
+        onResultSelect={(event, data) => {
+          const user = data.results.user.results[0].title;
+          const organization = data.results.organization.results[0].title;
+          const noResults = 'No results found.';
 
-              if (data.result.title !== noResults) {
-                if (user === noResults) {
-                  this.props.history.push(`/organization/${this.state.value}`);
-                } else if (organization === noResults) {
-                  this.props.history.push(`/user/${this.state.value}`);
-                }
-              }
+          if (data.result.title !== noResults) {
+            if (user === noResults) {
+              this.props.history.push(`/organization/${this.state.value}`);
+            } else if (organization === noResults) {
+              this.props.history.push(`/user/${this.state.value}`);
+            }
+          }
 
-              return this.handleResultSelect;
-            }}
-            onSearchChange={_.debounce(this.handleSearchChange, 500, {
-              leading: true,
-            })}
-            results={results}
-            value={value}
-          />
-        </Grid.Column>
-      </Grid>
+          return this.handleResultSelect;
+        }}
+        onSearchChange={_.debounce(this.handleSearchChange, 500, {
+          leading: true,
+        })}
+        results={results}
+        value={value}
+      />
     );
   }
 }

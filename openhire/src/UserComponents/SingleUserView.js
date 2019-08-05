@@ -118,7 +118,7 @@ export default class SingleUserView extends Component {
   // 0xdcb79fb59ecec21184c5e3574dff866a968de866;
 
   render() {
-    const { name, email, ownPage, experienceData, skills } = this.state;
+    const { name, email, experienceData, skills } = this.state;
 
     const { drizzle, drizzleState } = this.props;
     const pageAddress = this.props.props.match.params.address;
@@ -130,7 +130,6 @@ export default class SingleUserView extends Component {
         <div>Address:{pageAddress}</div>
         <div>Name:{name}</div>
         <div>Email:{email}</div>
-        <div>Owned:{`${ownPage}`}</div>
 
         <Skills
           skills={skills}

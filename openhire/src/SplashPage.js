@@ -5,10 +5,11 @@ import {
   Grid,
   Header,
   Icon,
-  Search,
   Segment,
 } from 'semantic-ui-react';
 import { withRouter } from 'react-router-dom';
+
+import SearchBar from './SearchBar';
 
 const SplashPage = props => {
   return (
@@ -23,8 +24,11 @@ const SplashPage = props => {
                 <Icon name="search" />
                 Find Profile
               </Header>
-
-              <Search placeholder="Search profiles..." />
+              <SearchBar
+                drizzle={props.drizzle}
+                drizzleState={props.drizzleState}
+                placeholder={'Search profiles...'}
+              />
             </Grid.Column>
 
             <Grid.Column>
