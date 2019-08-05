@@ -43,8 +43,7 @@ export default class ExperienceForm extends Component {
     const userAddress = (await this.props.drizzle.web3.eth.getAccounts())[0];
     let ownPage = false;
 
-    //props.pageAddress is passing in as all lowercase
-    if (userAddress.toLowerCase() === this.props.pageAddress) {
+    if (userAddress === this.props.pageAddress) {
       ownPage = true;
     }
 
