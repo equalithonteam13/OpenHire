@@ -119,7 +119,6 @@ export default class SingleUserView extends Component {
 
   render() {
     const { name, email, experienceData, skills } = this.state;
-
     const { drizzle, drizzleState } = this.props;
     const pageAddress = this.props.props.match.params.address;
     this.updateExperience();

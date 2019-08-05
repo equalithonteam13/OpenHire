@@ -51,7 +51,7 @@ export default class Skills extends Component {
     let ownPage = false;
 
     //props.pageAddress is passing in as all lowercase
-    if (userAddress.toLowerCase() === this.props.pageAddress) {
+    if (userAddress === this.props.pageAddress) {
       ownPage = true;
     }
 
@@ -148,6 +148,9 @@ export default class Skills extends Component {
     const { displaySkillForm, skillsArray, ownPage } = this.state;
     const skillsCount = this.updateSkillCount();
     this.fetchSkillData(skillsCount);
+
+    // console.log(this.state);
+
     return (
       <div>
         <h2>
