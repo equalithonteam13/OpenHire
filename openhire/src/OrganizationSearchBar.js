@@ -4,12 +4,6 @@ import { Search, Grid } from 'semantic-ui-react';
 
 const initialState = { isLoading: false, results: [], value: '' };
 const noResults = [{ title: 'No results found.' }];
-const organizationNoResults = {
-  organization: {
-    name: 'Organization',
-    results: noResults,
-  },
-};
 
 export default class OrganizationSearchBar extends Component {
   state = initialState;

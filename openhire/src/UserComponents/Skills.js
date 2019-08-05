@@ -4,7 +4,6 @@ import { toast, Flip } from 'react-toastify';
 import {
   Button,
   Form,
-  Input,
   Icon,
   Menu,
   Label,
@@ -168,7 +167,10 @@ export default class Skills extends Component {
 
         {displaySkillForm ? (
           <Form onSubmit={this.addSkill}>
-            <Input
+            <Form.Input
+              required
+              label="Skill Name"
+              width={6}
               key="skill"
               name="skill"
               value={this.state.skill}
