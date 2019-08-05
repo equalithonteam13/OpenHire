@@ -9,6 +9,7 @@ export default class SingleUserView extends Component {
     super();
     this.state = {
       userAddress: '',
+      pageAddress: '',
       name: '',
       email: '',
       experienceAddress: [],
@@ -20,18 +21,36 @@ export default class SingleUserView extends Component {
   }
 
   async componentDidMount() {
+    this.updatePage();
+  }
+
+  componentDidUpdate = prevProps => {
+    if (
+      this.props.props.match.params.address !==
+      prevProps.props.match.params.address
+    ) {
+      this.setState(
+        { pageAddress: this.props.props.match.params.address },
+        () => {
+          this.updatePage();
+        }
+      );
+    }
+  };
+
+  updatePage = async () => {
     const pageAddress = this.props.props.match.params.address;
     const { drizzle } = this.props;
     const userAddress = (await drizzle.web3.eth.getAccounts())[0];
-    this.setState({ userAddress: userAddress });
+    this.setState({ userAddress, pageAddress });
     let ownPage = false;
     if (userAddress === pageAddress) {
       ownPage = true;
     }
 
-    this.fetchUserData(userAddress, ownPage);
+    this.fetchUserData(pageAddress, ownPage);
     this.fetchExperienceData();
-  }
+  };
 
   async fetchUserData(address, ownPage) {
     const userData = await this.props.drizzle.contracts.OpenHire.methods
@@ -41,7 +60,6 @@ export default class SingleUserView extends Component {
       address
     );
 
-    console.log(userData[2], 'FETCH USER DATA');
     this.setState({
       name: userData[0],
       email: userData[1],
@@ -51,59 +69,65 @@ export default class SingleUserView extends Component {
   }
 
   updateExperience = () => {
-    const accountKey = Object.keys(
-      this.props.drizzleState.contracts.OpenHire.getUserData
-    )[0];
-    let updatedUserData = this.props.drizzleState.contracts.OpenHire
-      .getUserData[accountKey];
-    console.log(updatedUserData);
+    const { drizzleState } = this.props;
+    const keys = Object.keys(drizzleState.contracts.OpenHire.getUserData);
+    let identifier;
+
+    if (keys.length) {
+      for (let i = 0; i < keys.length; i++) {
+        if (
+          drizzleState.contracts.OpenHire.getUserData[keys[i]].args[0] ===
+          this.state.pageAddress
+        ) {
+          identifier = keys[i];
+          break;
+        }
+      }
+    }
+
+    let updatedUserData =
+      drizzleState.contracts.OpenHire.getUserData[identifier];
+
     if (updatedUserData !== undefined) {
       const updatedAddressArray = updatedUserData.value[2];
       if (
         updatedAddressArray.length !== this.state.experienceAddress.length ||
         updatedAddressArray.length !== this.state.experienceData.length
       ) {
-        console.log('did this run?');
         this.fetchExperienceData(updatedAddressArray);
       }
     }
   };
 
   fetchExperienceData = async updatedUserData => {
-    const { experienceAddress, userAddress } = this.state;
+    const { experienceAddress, pageAddress } = this.state;
     const experienceDataArray = [];
     for (let i = 0; i < experienceAddress.length; i++) {
       let experienceData = await this.props.drizzle.contracts.OpenHire.methods
-        .getExperience(userAddress, experienceAddress[i])
+        .getExperience(pageAddress, experienceAddress[i])
         .call();
       experienceDataArray.push(experienceData);
     }
-    console.log(experienceDataArray, 'FETCH ARRAY');
     this.setState({
-      experienceAddress: updatedUserData,
+      experienceAddress: updatedUserData || [],
       experienceData: experienceDataArray,
     });
   };
 
+  // 0xbed2567a6888cc3ad176baf0891b64337729ad97;
+  // 0xdcb79fb59ecec21184c5e3574dff866a968de866;
+
   render() {
-    const {
-      name,
-      email,
-      ownPage,
-      experienceData,
-      userAddress,
-      skills,
-    } = this.state;
+    const { name, email, ownPage, experienceData, skills } = this.state;
 
     const { drizzle, drizzleState } = this.props;
     const pageAddress = this.props.props.match.params.address;
-    console.log(this.state);
-    console.log(this.props);
     this.updateExperience();
+
     return (
       <div>
         <h1>Single User View</h1>
-        <div>Address:{userAddress}</div>
+        <div>Address:{pageAddress}</div>
         <div>Name:{name}</div>
         <div>Email:{email}</div>
         <div>Owned:{`${ownPage}`}</div>

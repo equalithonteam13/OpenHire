@@ -6,9 +6,11 @@ import Browse from './Browse';
 import React, { Component } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Header } from 'semantic-ui-react';
 
 import OrgProfileComponent from './OrganizationComponents/OrgProfileComponent';
 import SingleUserView from './UserComponents/SingleUserView';
+import SplashPage from './SplashPage';
 
 export default class HomePage extends Component {
   constructor() {
@@ -23,8 +25,23 @@ export default class HomePage extends Component {
       <div>
         <ToastContainer />
         <Navbar drizzle={drizzle} drizzleState={drizzleState} />
-        <h1>OpenHire</h1>
+        <Header as="h1" textAlign="center">
+          OpenHire
+        </Header>
         <Switch>
+          <Route
+            exact
+            path="/"
+            render={props => {
+              return (
+                <SplashPage
+                  drizzle={drizzle}
+                  drizzleState={drizzleState}
+                  props={props}
+                />
+              );
+            }}
+          />
           <Route
             exact
             path="/browse"
