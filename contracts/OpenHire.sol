@@ -36,7 +36,8 @@ contract OpenHire is Administrator {
         string emailAddress;
         address[] experienceKeys;
         //mapping so that organizations can look themselves up and approve
-        mapping(address => Experience) experience;
+        // mapping(address => Experience) experience;
+        Experience[] experienceList;
 
         //Can have either array of structs or mapping skill name to array + array with keys
         Skill[] skillsList;
@@ -44,6 +45,7 @@ contract OpenHire is Administrator {
     }
 
     struct Experience {
+        address orgAddress;
         string organization;
         string expertise;
         uint duration;
@@ -84,6 +86,7 @@ contract OpenHire is Administrator {
 
     function addExperience(address organizationAddress, string memory organizationName, string memory expertise, uint duration) public {
         Experience memory newExperience = Experience({
+            orgAddress: organizationAddress,
             organization: organizationName,
             expertise: expertise,
             duration: duration,
@@ -91,13 +94,13 @@ contract OpenHire is Administrator {
         });
 
         allUsers[msg.sender].experienceKeys.push(organizationAddress);
-        allUsers[msg.sender].experience[organizationAddress] = newExperience;
+        allUsers[msg.sender].experienceList.push(newExperience);
     }
 
     //Organizations verify User experience
-    function verifyExperience(address userAddress) public {
+    function verifyExperience(address userAddress, uint index) public {
         require(allOrganizations[msg.sender].verified == true);
-        allUsers[userAddress].experience[msg.sender].verified = true;
+        allUsers[userAddress].experienceList[index].verified = true;
     }
 
     function addSkill(string memory skillName) public {
@@ -125,7 +128,7 @@ contract OpenHire is Administrator {
         return (allUsers[userAddress].skillsList[skillIndex].name,allUsers[userAddress].skillsList[skillIndex].endorsers);
     }
 
-    function getExperience(address userAddress, address organizationAddress) public view returns (string memory, string memory, uint, bool) {
-        return (allUsers[userAddress].experience[organizationAddress].organization,allUsers[userAddress].experience[organizationAddress].expertise,allUsers[userAddress].experience[organizationAddress].duration,allUsers[userAddress].experience[organizationAddress].verified);
+    function getExperience(address userAddress, uint index) public view returns (string memory, string memory, uint, bool) {
+        return (allUsers[userAddress].experienceList[index].organization,allUsers[userAddress].experienceList[index].expertise,allUsers[userAddress].experienceList[index].duration,allUsers[userAddress].experienceList[index].verified);
     }
 }
