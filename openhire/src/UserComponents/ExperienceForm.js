@@ -30,9 +30,12 @@ export default class ExperienceForm extends Component {
 
   componentDidUpdate = prevProps => {
     if (this.props.pageAddress !== prevProps.pageAddress) {
-      this.setState({ pageAddress: this.props.pageAddress }, () => {
-        this.updatePage();
-      });
+      this.setState(
+        { pageAddress: this.props.pageAddress, ...defaultForm },
+        () => {
+          this.updatePage();
+        }
+      );
     }
   };
 

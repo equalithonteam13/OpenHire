@@ -33,9 +33,16 @@ export default class Skills extends Component {
 
   componentDidUpdate = prevProps => {
     if (this.props.pageAddress !== prevProps.pageAddress) {
-      this.setState({ pageAddress: this.props.pageAddress }, () => {
-        this.updatePage();
-      });
+      this.setState(
+        {
+          pageAddress: this.props.pageAddress,
+          displaySkillForm: false,
+          skill: '',
+        },
+        () => {
+          this.updatePage();
+        }
+      );
     }
   };
 
