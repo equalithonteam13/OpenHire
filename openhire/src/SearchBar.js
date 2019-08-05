@@ -102,6 +102,7 @@ class SearchBar extends Component {
         <Grid.Column width={6}>
           <Search
             category
+            placeholder="Address"
             loading={isLoading}
             onResultSelect={(event, data) => {
               const user = data.results.user.results[0].title;

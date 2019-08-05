@@ -1,16 +1,7 @@
 import React, { Component } from 'react';
 import { toast, Flip } from 'react-toastify';
 
-import {
-  Button,
-  Form,
-  Input,
-  Icon,
-  Menu,
-  Label,
-  Modal,
-  Header,
-} from 'semantic-ui-react';
+import { Button, Form, Icon } from 'semantic-ui-react';
 
 import OrganizationSearchBar from '../OrganizationSearchBar';
 
@@ -34,10 +25,23 @@ export default class ExperienceForm extends Component {
   }
 
   componentDidMount = async () => {
-    const userAddress = (await this.props.drizzle.web3.eth.getAccounts())[0];
+    this.updatePage();
+  };
 
+  componentDidUpdate = prevProps => {
+    if (this.props.pageAddress !== prevProps.pageAddress) {
+      this.setState({ pageAddress: this.props.pageAddress }, () => {
+        this.updatePage();
+      });
+    }
+  };
+
+  updatePage = async () => {
+    const userAddress = (await this.props.drizzle.web3.eth.getAccounts())[0];
     let ownPage = false;
-    if (userAddress === this.props.pageAddress) {
+
+    //props.pageAddress is passing in as all lowercase
+    if (userAddress.toLowerCase() === this.props.pageAddress) {
       ownPage = true;
     }
 
@@ -78,7 +82,6 @@ export default class ExperienceForm extends Component {
   };
 
   render() {
-    // console.log(this.state);
     const { displayExperienceForm, ownPage } = this.state;
     const { drizzle, drizzleState } = this.props;
 

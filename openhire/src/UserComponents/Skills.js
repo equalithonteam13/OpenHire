@@ -27,11 +27,25 @@ export default class Skills extends Component {
     };
   }
 
-  componentDidMount = async () => {
+  componentDidMount = () => {
+    this.updatePage();
+  };
+
+  componentDidUpdate = prevProps => {
+    if (this.props.pageAddress !== prevProps.pageAddress) {
+      this.setState({ pageAddress: this.props.pageAddress }, () => {
+        this.updatePage();
+      });
+    }
+  };
+
+  updatePage = async () => {
     const userAddress = (await this.props.drizzle.web3.eth.getAccounts())[0];
 
     let ownPage = false;
-    if (userAddress === this.props.pageAddress) {
+
+    //props.pageAddress is passing in as all lowercase
+    if (userAddress.toLowerCase() === this.props.pageAddress) {
       ownPage = true;
     }
 
@@ -78,13 +92,26 @@ export default class Skills extends Component {
   };
 
   updateSkillCount = () => {
-    const accountKey = Object.keys(
-      this.props.drizzleState.contracts.OpenHire.getSkillListLength
-    )[0];
-    let sll = this.props.drizzleState.contracts.OpenHire.getSkillListLength[
-      accountKey
-    ];
-    if (sll !== undefined) {
+    const { drizzleState } = this.props;
+    const keys = Object.keys(
+      drizzleState.contracts.OpenHire.getSkillListLength
+    );
+    let identifier;
+
+    if (keys.length) {
+      for (let i = 0; i < keys.length; i++) {
+        if (
+          drizzleState.contracts.OpenHire.getSkillListLength[keys[i]]
+            .args[0] === this.state.pageAddress
+        ) {
+          identifier = keys[i];
+          break;
+        }
+      }
+    }
+
+    if (identifier) {
+      let sll = drizzleState.contracts.OpenHire.getSkillListLength[identifier];
       return sll.value;
     } else {
       return 0;
@@ -92,16 +119,15 @@ export default class Skills extends Component {
   };
 
   fetchSkillData = async skillsCount => {
-    if (skillsCount !== this.state.skillsArray.length) {
+    if (+skillsCount !== this.state.skillsArray.length) {
       const skillsArray = [];
 
       for (let i = 0; i < skillsCount; i++) {
         let skillData = await this.props.drizzle.contracts.OpenHire.methods
-          .getUserSkillData(this.state.userAddress, i)
+          .getUserSkillData(this.state.pageAddress, i)
           .call();
         skillsArray.push(skillData);
       }
-
       this.setState({ skillsArray });
     }
   };
