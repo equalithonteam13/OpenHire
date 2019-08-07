@@ -177,7 +177,7 @@ export default class ExperienceForm extends Component {
                 width={6}
               />
               <Form.Input
-                label={employer ? 'Duration in Years' : 'Graduation Year'}
+                label={employer ? 'Year Worked' : 'Graduation Year'}
                 type="number"
                 min="0"
                 key="duration"

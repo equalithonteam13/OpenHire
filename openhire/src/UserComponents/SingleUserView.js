@@ -105,7 +105,9 @@ export default class SingleUserView extends Component {
         .call();
       experienceDataArray.push(experienceData);
     }
+
     this.setState({
+      experienceCount: updatedCount,
       experienceData: experienceDataArray,
     });
   };
@@ -115,7 +117,6 @@ export default class SingleUserView extends Component {
     const { drizzle, drizzleState } = this.props;
     const pageAddress = this.props.props.match.params.address;
     this.updateExperience();
-
     return (
       <div>
         <h1>Single User View</h1>
@@ -137,20 +138,49 @@ export default class SingleUserView extends Component {
         />
 
         <Segment.Group>
+          <Header>Education</Header>
+
+          {experienceData.length ? (
+            experienceData
+              .filter(experience => experience[5] === false)
+              .map((experience, index) => {
+                return (
+                  <Segment.Group key={index} horizontal>
+                    <Segment>
+                      {experience[1]} from {experience[0]}
+                    </Segment>
+                    <Segment>Graduated in: {experience[2]}</Segment>
+                    <Segment>Verfied:{`${experience[3]}`}</Segment>
+                  </Segment.Group>
+                );
+              })
+          ) : (
+            <Segment>No experience</Segment>
+          )}
+        </Segment.Group>
+
+        <Segment.Group>
           <Header>Experience</Header>
 
           {experienceData.length ? (
-            experienceData.map((experience, index) => {
-              return (
-                <Segment.Group key={index} horizontal>
-                  <Segment>
-                    {experience[1]} from {experience[0]}
-                  </Segment>
-                  <Segment>For {experience[2]} Months</Segment>
-                  <Segment>Verfied:{`${experience[3]}`}</Segment>
-                </Segment.Group>
-              );
-            })
+            experienceData
+              .filter(experience => experience[5] === true)
+              .map((experience, index) => {
+                return (
+                  <Segment.Group key={index}>
+                    <Segment>{experience[0]}</Segment>
+                    <Segment.Group horizontal>
+                      <Segment>{experience[1]}</Segment>
+                      <Segment>
+                        {experience[2] === '2019'
+                          ? 'Currently Employed'
+                          : `Worked in: ${experience[2]}`}
+                      </Segment>
+                      <Segment>Verfied:{`${experience[3]}`}</Segment>
+                    </Segment.Group>
+                  </Segment.Group>
+                );
+              })
           ) : (
             <Segment>No experience</Segment>
           )}
