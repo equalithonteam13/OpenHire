@@ -1,5 +1,12 @@
 import React from "react";
-import { Button, Form, Input, Label, Checkbox } from "semantic-ui-react";
+import {
+  Button,
+  Form,
+  Input,
+  Label,
+  Checkbox,
+  Segment
+} from "semantic-ui-react";
 // Checkbox, Label, Icon
 
 export default class Browse extends React.Component {
@@ -9,13 +16,11 @@ export default class Browse extends React.Component {
       allUsers: [],
       currentSkill: "",
       skillsToSearch: [],
+      majorToSearch: "",
       searchResult: [],
       numberOfSearches: 0,
       loading: false,
-      errorMessage: "",
-      displayName: false,
-      displayEmail: false,
-      showAll: false
+      errorMessage: ""
     };
   }
 
@@ -49,10 +54,18 @@ export default class Browse extends React.Component {
           //store only the name of the skill in userSkills array
           userSkills.push(skill[0]);
         }
+        //array of experiences
+        user["experience"] = [];
+        for (let i = 0; i < user[2]; i++) {
+          let experience = await this.props.drizzle.contracts.OpenHire.methods
+            .getExperience(userAddress, i)
+            .call();
+          user["experience"].push(experience);
+        }
         //attach all of userSkills to user object
         user[3] = userSkills;
         //attach userAddress to user object
-        user[4] = userAddress;
+        user["userAddress"] = userAddress;
         console.log(user);
         users.push(user);
         index++;
@@ -73,30 +86,50 @@ export default class Browse extends React.Component {
   handleOnSubmit = async event => {
     event.preventDefault();
 
-    const { allUsers, skillsToSearch } = this.state;
+    const { allUsers, skillsToSearch, majorToSearch } = this.state;
 
-    let results = [];
-
-    for (let i = 0; i < allUsers.length; i++) {
-      const userSkills = allUsers[i][3];
-      for (let j = 0; j < skillsToSearch.length; j++) {
-        //if current user being checked does not have skill,
-        if (!userSkills.includes(skillsToSearch[j])) {
-          break;
-        }
-        //if current user contains all skills that is being searched, add user to results array
-        if (j === skillsToSearch.length - 1) {
-          results.push(allUsers[i]);
+    let results = skillsToSearch.length ? [] : [...allUsers];
+    //find users that match skills to search
+    if (skillsToSearch.length) {
+      for (let i = 0; i < allUsers.length; i++) {
+        const userSkills = allUsers[i][3];
+        for (let j = 0; j < skillsToSearch.length; j++) {
+          //if current user being checked does not have skill,
+          if (!userSkills.includes(skillsToSearch[j])) {
+            break;
+          }
+          //if current user contains all skills that is being searched, add user to results array
+          if (j === skillsToSearch.length - 1) {
+            results.push(allUsers[i]);
+          }
         }
       }
     }
 
+    //find users that match college major to search
+    if (majorToSearch) {
+      const major = majorToSearch.toLowerCase();
+      for (let i = 0; i < results.length; i++) {
+        const numOfUserExperiences = results[i][2];
+        let userMatchesMajor = false;
+        for (let j = 0; j < numOfUserExperiences; j++) {
+          if (results[i]["experience"][j][1].toLowerCase().includes(major)) {
+            userMatchesMajor = true;
+            break;
+          }
+        }
+        //if user does not match the major to search, remove it from results array
+        if (!userMatchesMajor) {
+          results.splice(i, 1);
+        }
+      }
+    }
     const numberOfSearches = this.state.numberOfSearches + 1;
     this.setState({
       numberOfSearches: numberOfSearches,
       searchResult: results,
-      skillsToSearch: [],
-      showAll: false
+      showAll: false,
+      majorToSearch: ""
     });
   };
 
@@ -109,6 +142,14 @@ export default class Browse extends React.Component {
     });
   };
 
+  removeSkillToSearch = index => {
+    let skillsToSearch = this.state.skillsToSearch.filter(
+      (skill, idx) => idx !== index
+    );
+    this.setState({
+      skillsToSearch: skillsToSearch
+    });
+  };
   toggle = name => {
     this.setState({
       [name]: !this.state[name]
@@ -120,19 +161,19 @@ export default class Browse extends React.Component {
       skillsToSearch,
       searchResult,
       allUsers,
-      numberOfSearches
+      numberOfSearches,
+      showAll
     } = this.state;
+
     return (
       <div className="browse">
         <div className="browseFilter">
           <h1> Filters: </h1>
           <div className="allLabels">
             <div className="label">
-              <Label className="label">Show All</Label>
-              <Checkbox
-                checked={this.state.showAll}
-                onClick={() => this.toggle("showAll")}
-              />
+              <Button className="label" onClick={() => this.toggle("showAll")}>
+                Show All
+              </Button>
             </div>
             <div className="label">
               <Label className="label">Name</Label>
@@ -150,7 +191,15 @@ export default class Browse extends React.Component {
               />
             </div>
           </div>
-          <Form onSubmit={this.handleOnSubmit}>
+          <Form className="browseForm">
+            <Input
+              key="majorToSearch"
+              name="majorToSearch"
+              value={this.state.majorToSearch}
+              placeholder="Search for College Major"
+              onChange={this.handleOnChange}
+            />
+            <br />
             <Input
               key="currentSkill"
               name="currentSkill"
@@ -161,13 +210,20 @@ export default class Browse extends React.Component {
             <Button type="button" onClick={this.addSkillToSearch}>
               Add Skill
             </Button>
-
             <ul>
               {skillsToSearch.map((skill, index) => {
-                return <Label key={index}>{skill}</Label>;
+                return (
+                  <Label
+                    key={index}
+                    onClick={() => this.removeSkillToSearch(index)}
+                  >
+                    X {skill}
+                  </Label>
+                );
               })}
             </ul>
             <Button
+              onClick={this.handleOnSubmit}
               type="submit"
               disabled={this.state.loading}
               loading={this.state.loading}
@@ -177,17 +233,19 @@ export default class Browse extends React.Component {
           </Form>
         </div>
         <div className="browseResults">
-          {numberOfSearches === 0 || this.state.showAll
+          {numberOfSearches === 0 || showAll
             ? allUsers.map((user, index) => {
                 return (
                   <div
                     className="results"
                     key={index}
                     onClick={() =>
-                      this.props.props.history.push(`/user/${user[4]}`)
+                      this.props.props.history.push(
+                        `/user/${user["userAddress"]}`
+                      )
                     }
                   >
-                    <div> {user[4]}</div>
+                    <div> {user["userAddress"]}</div>
                     <div> {this.state.displayName ? user[0] : ""}</div>
                     <div> {this.state.displayEmail ? user[1] : ""} </div>
                   </div>
@@ -202,7 +260,7 @@ export default class Browse extends React.Component {
                       this.props.props.history.push(`/user/${user[4]}`)
                     }
                   >
-                    <div> {user[4]}</div>
+                    <div> {user["userAddress"]}</div>
                     <div> {this.state.displayName ? user[0] : ""}</div>
                     <div> {this.state.displayEmail ? user[1] : ""} </div>
                   </div>
