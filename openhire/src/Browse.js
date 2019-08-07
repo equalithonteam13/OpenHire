@@ -1,5 +1,5 @@
-import React from 'react';
-import { Button, Form, Input } from 'semantic-ui-react';
+import React from "react";
+import { Button, Form, Input, Label, Checkbox } from "semantic-ui-react";
 // Checkbox, Label, Icon
 
 export default class Browse extends React.Component {
@@ -7,16 +7,20 @@ export default class Browse extends React.Component {
     super();
     this.state = {
       allUsers: [],
-      currentSkill: '',
+      currentSkill: "",
       skillsToSearch: [],
       searchResult: [],
       numberOfSearches: 0,
       loading: false,
-      errorMessage: '',
+      errorMessage: "",
+      displayName: false,
+      displayEmail: false,
+      showAll: false
     };
   }
 
   async componentDidMount() {
+    console.log("props", this.props);
     const { drizzle } = this.props;
     let loop = true;
     let index = 0;
@@ -47,6 +51,9 @@ export default class Browse extends React.Component {
         }
         //attach all of userSkills to user object
         user[3] = userSkills;
+        //attach userAddress to user object
+        user[4] = userAddress;
+        console.log(user);
         users.push(user);
         index++;
       } catch (error) {
@@ -59,7 +66,7 @@ export default class Browse extends React.Component {
 
   handleOnChange = event => {
     this.setState({
-      [event.target.name]: event.target.value,
+      [event.target.name]: event.target.value
     });
   };
 
@@ -89,6 +96,7 @@ export default class Browse extends React.Component {
       numberOfSearches: numberOfSearches,
       searchResult: results,
       skillsToSearch: [],
+      showAll: false
     });
   };
 
@@ -96,8 +104,14 @@ export default class Browse extends React.Component {
     let skillsToSearch = this.state.skillsToSearch;
     skillsToSearch.push(this.state.currentSkill);
     this.setState({
-      currentSkill: '',
-      skillsToSearch: skillsToSearch,
+      currentSkill: "",
+      skillsToSearch: skillsToSearch
+    });
+  };
+
+  toggle = name => {
+    this.setState({
+      [name]: !this.state[name]
     });
   };
 
@@ -106,54 +120,95 @@ export default class Browse extends React.Component {
       skillsToSearch,
       searchResult,
       allUsers,
-      numberOfSearches,
+      numberOfSearches
     } = this.state;
     return (
-      <div>
-        <h1> BROWSE </h1>
-        <Form onSubmit={this.handleOnSubmit}>
-          <Input
-            key="currentSkill"
-            name="currentSkill"
-            value={this.state.currentSkill}
-            placeholder="Search"
-            onChange={this.handleOnChange}
-          />
-          <Button type="button" onClick={this.addSkillToSearch}>
-            Add Skill
-          </Button>
+      <div className="browse">
+        <div className="browseFilter">
+          <h1> Filters: </h1>
+          <div className="allLabels">
+            <div className="label">
+              <Label className="label">Show All</Label>
+              <Checkbox
+                checked={this.state.showAll}
+                onClick={() => this.toggle("showAll")}
+              />
+            </div>
+            <div className="label">
+              <Label className="label">Name</Label>
+              <Checkbox
+                checked={this.state.displayName}
+                onClick={() => this.toggle("displayName")}
+              />
+            </div>
 
-          <ul>
-            {skillsToSearch.map((skill, index) => {
-              return <li key={index}>{skill}</li>;
-            })}
-          </ul>
-          <Button
-            type="submit"
-            disabled={this.state.loading}
-            loading={this.state.loading}
-          >
-            Search
-          </Button>
-        </Form>
+            <div className="label">
+              <Label>Email</Label>
+              <Checkbox
+                checked={this.state.displayEmail}
+                onClick={() => this.toggle("displayEmail")}
+              />
+            </div>
+          </div>
+          <Form onSubmit={this.handleOnSubmit}>
+            <Input
+              key="currentSkill"
+              name="currentSkill"
+              value={this.state.currentSkill}
+              placeholder="Add Skill to Search"
+              onChange={this.handleOnChange}
+            />
+            <Button type="button" onClick={this.addSkillToSearch}>
+              Add Skill
+            </Button>
 
-        {numberOfSearches === 0
-          ? allUsers.map((user, index) => {
-              return (
-                <div key={index}>
-                  {' '}
-                  Name: {user[0]} Email: {user[1]}{' '}
-                </div>
-              );
-            })
-          : searchResult.map((user, index) => {
-              return (
-                <div key={index}>
-                  {' '}
-                  Name: {user[0]} Email: {user[1]}{' '}
-                </div>
-              );
-            })}
+            <ul>
+              {skillsToSearch.map((skill, index) => {
+                return <Label key={index}>{skill}</Label>;
+              })}
+            </ul>
+            <Button
+              type="submit"
+              disabled={this.state.loading}
+              loading={this.state.loading}
+            >
+              Search
+            </Button>
+          </Form>
+        </div>
+        <div className="browseResults">
+          {numberOfSearches === 0 || this.state.showAll
+            ? allUsers.map((user, index) => {
+                return (
+                  <div
+                    className="results"
+                    key={index}
+                    onClick={() =>
+                      this.props.props.history.push(`/user/${user[4]}`)
+                    }
+                  >
+                    <div> {user[4]}</div>
+                    <div> {this.state.displayName ? user[0] : ""}</div>
+                    <div> {this.state.displayEmail ? user[1] : ""} </div>
+                  </div>
+                );
+              })
+            : searchResult.map((user, index) => {
+                return (
+                  <div
+                    className="results"
+                    key={index}
+                    onClick={() =>
+                      this.props.props.history.push(`/user/${user[4]}`)
+                    }
+                  >
+                    <div> {user[4]}</div>
+                    <div> {this.state.displayName ? user[0] : ""}</div>
+                    <div> {this.state.displayEmail ? user[1] : ""} </div>
+                  </div>
+                );
+              })}
+        </div>
       </div>
     );
   }
