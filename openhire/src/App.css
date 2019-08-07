@@ -31,3 +31,48 @@
     transform: rotate(360deg);
   }
 }
+
+.browse {
+  display: flex;
+  justify-content: center;
+  height: 100vh;
+}
+
+.browseFilter {
+  display: flex;
+  flex: 1;
+  background-color: #2d2d2a;
+  flex-direction: column;
+  border-radius: 10px;
+  color: white;
+  text-decoration: underline;
+}
+
+.allLabels {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  margin-bottom: 10px;
+}
+.label {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.browseResults {
+  display: flex;
+  flex: 2;
+  flex-direction: column;
+  background-color: lightgray;
+  border-radius: 10px;
+}
+.results {
+  display: flex;
+  justify-content: space-evenly;
+  text-decoration: underline;
+}
+
+.results:hover {
+  cursor: pointer;
+}
