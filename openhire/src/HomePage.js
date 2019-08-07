@@ -8,9 +8,9 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Header } from 'semantic-ui-react';
 
-import OrgProfileComponent from './OrganizationComponents/OrgProfileComponent';
 import SingleUserView from './UserComponents/SingleUserView';
 import SplashPage from './SplashPage';
+import OrgProfileContainerComponent from './OrganizationComponents/OrgProfileContainerComponent';
 
 export default class HomePage extends Component {
   constructor() {
@@ -81,7 +81,8 @@ export default class HomePage extends Component {
             exact
             path="/organization/:address"
             render={props => (
-              <OrgProfileComponent
+              <OrgProfileContainerComponent
+              // <OrgProfileComponent
                 {...props}
                 drizzle={drizzle}
                 drizzleState={drizzleState}
