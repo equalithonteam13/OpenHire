@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { toast, Flip } from 'react-toastify';
 
-import { Button, Form, Icon } from 'semantic-ui-react';
+import { Button, Form, Icon, Checkbox, Label } from 'semantic-ui-react';
 
 import OrganizationSearchBar from '../OrganizationSearchBar';
 
@@ -10,6 +10,7 @@ const defaultForm = {
   organization: '',
   expertise: '',
   duration: 0,
+  employer: false,
   displayExperienceForm: false,
 };
 
@@ -61,7 +62,7 @@ export default class ExperienceForm extends Component {
   };
 
   addExperience = async event => {
-    const { address, organization, expertise, duration } = this.state;
+    const { address, organization, expertise, duration, employer } = this.state;
     event.preventDefault();
     this.setState({ loading: true });
 
@@ -72,7 +73,7 @@ export default class ExperienceForm extends Component {
     });
     try {
       await this.props.drizzle.contracts.OpenHire.methods
-        .addExperience(address, organization, expertise, duration)
+        .addExperience(address, organization, expertise, duration, employer)
         .send({ from: this.state.userAddress });
 
       this.setState({ errorMessage: '' });
@@ -83,8 +84,18 @@ export default class ExperienceForm extends Component {
     this.setState({ loading: false, ...defaultForm });
   };
 
+  toggleForm = option => {
+    if (option !== undefined) {
+      this.setState({ employer: option });
+    } else {
+      this.setState(prevState => ({
+        employer: !prevState.employer,
+      }));
+    }
+  };
+
   render() {
-    const { displayExperienceForm, ownPage } = this.state;
+    const { displayExperienceForm, ownPage, employer } = this.state;
     const { drizzle, drizzleState } = this.props;
 
     return (
@@ -112,9 +123,31 @@ export default class ExperienceForm extends Component {
               handleResultSelect={this.handleResultSelect}
             />
             <Form onSubmit={this.addExperience}>
+              <Label
+                as="a"
+                image
+                onClick={() => this.toggleForm(false)}
+                color={employer ? 'grey' : 'blue'}
+              >
+                <Icon name="book" />
+                Education
+              </Label>
+              <Checkbox
+                toggle
+                checked={employer}
+                onClick={() => this.toggleForm()}
+              />
+              <Label
+                as="a"
+                onClick={() => this.toggleForm(true)}
+                color={employer ? 'blue' : 'grey'}
+              >
+                <Icon name="building" />
+                Employer
+              </Label>
               <Form.Input
                 required
-                label="Organization Address"
+                label={employer ? 'Employer Address' : 'Education Address'}
                 key="address"
                 name="address"
                 value={this.state.address}
@@ -124,7 +157,7 @@ export default class ExperienceForm extends Component {
               />
               <Form.Input
                 required
-                label="Organization Name"
+                label={employer ? 'Employer Name' : 'Education Name'}
                 key="organization"
                 name="organization"
                 value={this.state.organization}
@@ -135,7 +168,7 @@ export default class ExperienceForm extends Component {
 
               <Form.Input
                 required
-                label="Expertise"
+                label={employer ? 'Role' : 'Field of Study'}
                 key="expertise"
                 name="expertise"
                 value={this.state.expertise}
@@ -144,7 +177,7 @@ export default class ExperienceForm extends Component {
                 width={6}
               />
               <Form.Input
-                label="Duration in Months"
+                label={employer ? 'Duration in Years' : 'Graduation Year'}
                 type="number"
                 min="0"
                 key="duration"

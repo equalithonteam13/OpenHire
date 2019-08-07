@@ -12,7 +12,6 @@ export default class SingleUserView extends Component {
       pageAddress: '',
       name: '',
       email: '',
-      experienceAddress: [],
       experienceData: [],
       ownPage: false,
       skillsListLength: 0,
@@ -49,7 +48,6 @@ export default class SingleUserView extends Component {
     }
 
     this.fetchUserData(pageAddress, ownPage);
-    this.fetchExperienceData();
   };
 
   async fetchUserData(address, ownPage) {
@@ -60,12 +58,15 @@ export default class SingleUserView extends Component {
       address
     );
 
-    this.setState({
-      name: userData[0],
-      email: userData[1],
-      experienceAddress: userData[2],
-      ownPage: ownPage,
-    });
+    this.setState(
+      {
+        name: userData[0],
+        email: userData[1],
+        experienceCount: userData[2],
+        ownPage: ownPage,
+      },
+      () => this.fetchExperienceData()
+    );
   }
 
   updateExperience = () => {
@@ -84,38 +85,30 @@ export default class SingleUserView extends Component {
         }
       }
     }
-
     let updatedUserData =
       drizzleState.contracts.OpenHire.getUserData[identifier];
-
     if (updatedUserData !== undefined) {
-      const updatedAddressArray = updatedUserData.value[2];
-      if (
-        updatedAddressArray.length !== this.state.experienceAddress.length ||
-        updatedAddressArray.length !== this.state.experienceData.length
-      ) {
-        this.fetchExperienceData(updatedAddressArray);
+      const updatedExperienceCount = updatedUserData.value[2];
+      if (updatedExperienceCount !== this.state.experienceCount) {
+        this.fetchExperienceData(updatedExperienceCount);
       }
     }
   };
 
-  fetchExperienceData = async updatedUserData => {
-    const { experienceAddress, pageAddress } = this.state;
+  fetchExperienceData = async updatedCount => {
+    const { experienceCount, pageAddress } = this.state;
+    let experienceNumber = updatedCount || experienceCount;
     const experienceDataArray = [];
-    for (let i = 0; i < experienceAddress.length; i++) {
+    for (let i = 0; i < experienceNumber; i++) {
       let experienceData = await this.props.drizzle.contracts.OpenHire.methods
-        .getExperience(pageAddress, experienceAddress[i])
+        .getExperience(pageAddress, i)
         .call();
       experienceDataArray.push(experienceData);
     }
     this.setState({
-      experienceAddress: updatedUserData || [],
       experienceData: experienceDataArray,
     });
   };
-
-  // 0xbed2567a6888cc3ad176baf0891b64337729ad97;
-  // 0xdcb79fb59ecec21184c5e3574dff866a968de866;
 
   render() {
     const { name, email, experienceData, skills } = this.state;
