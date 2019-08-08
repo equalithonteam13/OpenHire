@@ -66,7 +66,6 @@ export default class Browse extends React.Component {
         user[3] = userSkills;
         //attach userAddress to user object
         user["userAddress"] = userAddress;
-        console.log(user);
         users.push(user);
         index++;
       } catch (error) {
@@ -191,6 +190,7 @@ export default class Browse extends React.Component {
               />
             </div>
           </div>
+          <br />
           <Form className="browseForm">
             <Input
               key="majorToSearch"
