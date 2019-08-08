@@ -6,49 +6,39 @@ import { withRouter } from "react-router-dom";
 class NavBar extends Component {
   constructor() {
     super();
-    this.state = { activeItem: "Home", type: "", user: {} };
+    this.state = { activeItem: "Home", type: "", loggedIn: false };
   }
 
   async componentDidMount() {
     const { drizzle, drizzleState } = this.props;
-    const user = await drizzle.contracts.OpenHire.methods
+    let user = await drizzle.contracts.OpenHire.methods
       .getUserData(drizzleState.accounts[0])
       .call();
-    this.setState({
-      user: user
-    });
+    //if address is not a user, check if it's an organization
+    if (!user[0]) {
+      user = await drizzle.contracts.OpenHire.methods
+        .getOrganization(drizzleState.accounts[0])
+        .call();
+      if (user[0]) {
+        this.setState({
+          loggedIn: true,
+          type: "org"
+        });
+      }
+    } else {
+      this.setState({
+        loggedIn: true,
+        type: "user"
+      });
+    }
   }
 
   handleItemClick = name => {
     this.setState({ activeItem: name });
   };
 
-  handleProfileClick = async (e, address) => {
-    let orgData;
-    let userData;
-    try {
-      orgData = await this.props.drizzle.contracts.OpenHire.methods
-        .getOrganization(address)
-        .call();
-
-      userData = await this.props.drizzle.contracts.OpenHire.methods
-        .getUserData(address)
-        .call();
-
-      if (orgData[2]) {
-        this.setState({ type: "org" });
-      } else if (userData[2]) {
-        this.setState({ type: "user" });
-      }
-
-      return orgData;
-    } catch (error) {
-      console.log("ERROR");
-    }
-  };
-
   render() {
-    const { activeItem, type, user } = this.state;
+    const { activeItem, type, loggedIn } = this.state;
     const { drizzle, drizzleState } = this.props;
     return (
       <Menu>
@@ -73,12 +63,11 @@ class NavBar extends Component {
               return this.handleItemClick("Browse");
             }}
           />
-          {user[0] ? (
+          {loggedIn ? (
             <Menu.Item
               name="Profile"
               active={activeItem === "Profile"}
               onClick={() => {
-                this.handleProfileClick(drizzleState.accounts[0]);
                 if (type === "user") {
                   this.props.history.push("/");
                   this.props.history.push(`/user/${drizzleState.accounts[0]}`);

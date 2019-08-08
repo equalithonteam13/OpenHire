@@ -8,23 +8,34 @@ class SplashPage extends React.Component {
 	constructor() {
 		super();
 		this.state = {
-			loggedIn: false
+			loggedIn: false,
+			type: ''
 		};
 	}
 
 	async componentDidMount() {
 		const { drizzle, drizzleState } = this.props;
-		const user = await drizzle.contracts.OpenHire.methods.getUserData(drizzleState.accounts[0]).call();
-		if (user[0]) {
+		let user = await drizzle.contracts.OpenHire.methods.getUserData(drizzleState.accounts[0]).call();
+		//if address is not a user, check if it's an organization
+		if (!user[0]) {
+			user = await drizzle.contracts.OpenHire.methods.getOrganization(drizzleState.accounts[0]).call();
+			if (user[0]) {
+				this.setState({
+					loggedIn: true,
+					type: 'org'
+				});
+			}
+		} else {
 			this.setState({
-				loggedIn: true
+				loggedIn: true,
+				type: 'user'
 			});
 		}
 	}
 
 	render() {
 		const { drizzle, drizzleState, props } = this.props;
-		const { loggedIn } = this.state;
+		const { loggedIn, type } = this.state;
 		return (
 			<div>
 				<Segment placeholder>
@@ -56,7 +67,9 @@ class SplashPage extends React.Component {
 									<Button
 										primary
 										onClick={() => {
-											props.history.push(`/user/${drizzleState.accounts[0]}`);
+											type === 'user'
+												? props.history.push(`/user/${drizzleState.accounts[0]}`)
+												: props.history.push(`/organization/${drizzleState.accounts[0]}`);
 										}}
 									>
 										Profile
