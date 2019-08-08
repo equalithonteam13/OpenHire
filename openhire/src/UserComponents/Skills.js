@@ -1,7 +1,15 @@
 import React, { Component } from 'react';
 import { toast, Flip } from 'react-toastify';
 
-import { Button, Form, Icon, Menu, Label, Modal, Header } from 'semantic-ui-react';
+import {
+  Button,
+  Form,
+  Icon,
+  Menu,
+  Label,
+  Modal,
+  Header,
+} from 'semantic-ui-react';
 
 export default class Skills extends Component {
   constructor(props) {
@@ -67,7 +75,7 @@ export default class Skills extends Component {
     });
     try {
       await this.props.drizzle.contracts.OpenHire.methods
-        .addSkill(this.state.skill)
+        .addSkill(this.state.pageAddress, this.state.skill, false)
         .send({ from: this.state.userAddress });
 
       this.setState({ errorMessage: '' });
@@ -123,8 +131,10 @@ export default class Skills extends Component {
         let skillData = await this.props.drizzle.contracts.OpenHire.methods
           .getUserSkillData(this.state.pageAddress, i)
           .call();
+        skillData.index = i;
         skillsArray.push(skillData);
       }
+
       this.setState({ skillsArray });
     }
   };
@@ -181,52 +191,73 @@ export default class Skills extends Component {
           ''
         )}
 
-        <Menu compact>
-          {skillsArray.map((skill, index) => {
-            return (
-              <Menu.Item key={index}>
-                {skill[0]}
+        <Menu
+          compact
+          style={{
+            background: '#2d2d2a',
+          }}
+        >
+          {skillsArray.length ? (
+            skillsArray
+              .filter(skill => skill[2] === false)
+              .map((skill, index) => {
+                return (
+                  <Menu.Item
+                    key={index}
+                    style={{
+                      color: 'white',
+                      border: '2px solid white',
+                      margin: '1em',
+                    }}
+                  >
+                    {skill[0]}
 
-                <Modal
-                  trigger={
-                    <Label as="a" circular className="modal-trigger">
-                      {skill[1].length}
-                    </Label>
-                  }
-                  closeIcon
-                >
-                  <Header
-                    content={
-                      <div>
-                        {skill[0]} ({skill[1].length})
-                      </div>
-                    }
-                  />
-                  <Modal.Content>
-                    <div>Endorsers</div>
-                    {skill[1].map((address, index) => {
-                      return <div key={index}>{address}</div>;
-                    })}
-                  </Modal.Content>
-                  <Modal.Actions>
-                    {skill[1].includes(this.state.userAddress) ? (
-                      <Button disabled={true}>
-                        <Icon name="check" /> Endorsed
-                      </Button>
-                    ) : (
-                      <Button
-                        onClick={() =>
-                          this.endorseSkill(this.state.userAddress, index)
+                    <Modal
+                      trigger={
+                        <Label as="a" circular className="modal-trigger">
+                          {skill[1].length}
+                        </Label>
+                      }
+                      closeIcon
+                    >
+                      <Header
+                        content={
+                          <div>
+                            {skill[0]} ({skill[1].length})
+                          </div>
                         }
-                      >
-                        Endorse
-                      </Button>
-                    )}
-                  </Modal.Actions>
-                </Modal>
-              </Menu.Item>
-            );
-          })}
+                      />
+                      <Modal.Content>
+                        <div>Endorsers</div>
+                        {skill[1].map((address, index) => {
+                          return <div key={index}>{address}</div>;
+                        })}
+                      </Modal.Content>
+                      <Modal.Actions>
+                        {skill[1].includes(this.state.userAddress) ? (
+                          <Button disabled={true}>
+                            <Icon name="check" /> Endorsed
+                          </Button>
+                        ) : (
+                          <Button
+                            onClick={() =>
+                              this.endorseSkill(
+                                this.state.pageAddress,
+                                skill.index
+                              )
+                            }
+                          >
+                            Endorse
+                          </Button>
+                        )}
+                      </Modal.Actions>
+                    </Modal>
+                  </Menu.Item>
+                );
+              })
+          ) : (
+            <div>No skills yet</div>
+          )}
         </Menu>
 
         <Modal />

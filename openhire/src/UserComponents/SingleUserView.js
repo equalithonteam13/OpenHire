@@ -1,22 +1,24 @@
-import React, { Component } from "react";
-import Skills from "./Skills";
-import ExperienceForm from "./ExperienceForm";
+import React, { Component } from 'react';
+import Skills from './Skills';
+import ExperienceForm from './ExperienceForm';
 
-import { Header, Segment, Icon } from "semantic-ui-react";
+import { Header, Segment, Icon, Label, Checkbox } from 'semantic-ui-react';
+import Feedback from './Feedback';
 
 export default class SingleUserView extends Component {
   constructor() {
     super();
     this.state = {
-      userAddress: "",
-      pageAddress: "",
-      name: "",
-      email: "",
+      userAddress: '',
+      pageAddress: '',
+      name: '',
+      email: '',
       experienceData: [],
       experienceCount: 0,
       ownPage: false,
       skillsListLength: 0,
-      skills: []
+      skills: [],
+      displayInformation: false,
     };
   }
 
@@ -70,7 +72,7 @@ export default class SingleUserView extends Component {
         name: userData[0],
         email: userData[1],
         experienceCount: userData[2],
-        ownPage: ownPage
+        ownPage: ownPage,
       },
       () => this.fetchExperienceData()
     );
@@ -90,7 +92,7 @@ export default class SingleUserView extends Component {
 
     this.setState({
       experienceCount: updatedCount,
-      experienceData: experienceDataArray
+      experienceData: experienceDataArray,
     });
   };
 
@@ -131,54 +133,91 @@ export default class SingleUserView extends Component {
   generateExperience = experience => {
     if (experience[3]) {
       return (
-        <Icon name="check circle outline" className="green">
+        <div style={{ color: '#21ba45' }}>
+          <Icon name="check circle outline" className="green" />
           Verified
-        </Icon>
+        </div>
       );
     }
     if (experience[4] === this.state.userAddress) {
       return (
-        <Icon
-          name="check circle"
-          link
-          onClick={() => this.verifyExperience(experience.index)}
-        >
+        <div>
+          <Icon
+            name="check circle"
+            link
+            onClick={() => this.verifyExperience(experience.index)}
+          />
           Unverified
-        </Icon>
+        </div>
       );
     }
-    return <Icon name="check circle">Unverified</Icon>;
+    return (
+      <div>
+        <Icon name="check circle" />) Unverified
+      </div>
+    );
+  };
+
+  toggleInformation = option => {
+    if (option !== undefined) {
+      this.setState({ displayInformation: option });
+    } else {
+      this.setState(prevState => ({
+        displayInformation: !prevState.displayInformation,
+      }));
+    }
   };
 
   render() {
-    const { name, email, experienceData, skills } = this.state;
+    const {
+      name,
+      email,
+      experienceData,
+      skills,
+      displayInformation,
+    } = this.state;
     const { drizzle, drizzleState } = this.props;
     const pageAddress = this.props.props.match.params.address;
     this.updateExperience();
     return (
       <div className="ui items">
         <h1>Single User View</h1>
+        <Label
+          as="a"
+          image
+          onClick={() => this.toggleInformation(false)}
+          color={displayInformation ? 'grey' : 'blue'}
+        >
+          Hide All
+        </Label>
+        <Checkbox
+          toggle
+          checked={displayInformation}
+          onClick={() => this.toggleInformation()}
+        />
+        <Label
+          as="a"
+          onClick={() => this.toggleInformation(true)}
+          color={displayInformation ? 'blue' : 'grey'}
+        >
+          Show All
+        </Label>
         <div>
-          {" "}
           <strong>Address:{pageAddress}</strong>
         </div>
-        <div>
-          <strong> Name:{name} </strong>
-        </div>
-        <div>
-          <strong>Email:{email}</strong>
-        </div>
-        <div className="ui divider" />
-        <div>
-          <Skills
-            skills={skills}
-            drizzle={drizzle}
-            drizzleState={drizzleState}
-            pageAddress={pageAddress}
-          />
-        </div>
+        {displayInformation ? (
+          <div>
+            <div>
+              <strong> Name:{name} </strong>
+            </div>
+            <div>
+              <strong>Email:{email}</strong>
+            </div>
+          </div>
+        ) : (
+          ''
+        )}
 
-        <div className="ui divider" />
         <div>
           <ExperienceForm
             drizzle={drizzle}
@@ -193,11 +232,30 @@ export default class SingleUserView extends Component {
                 .filter(experience => experience[5] === false)
                 .map((experience, index) => {
                   return (
-                    <Segment.Group key={index} horizontal>
+                    <Segment.Group
+                      key={index}
+                      horizontal
+                      style={{
+                        margin: '0 0 1em 6em',
+                        borderBottom: '2px solid white',
+                      }}
+                    >
                       <Segment>
-                        {experience[1]} from {experience[0]}
+                        {experience[1]} from{' '}
+                        {displayInformation ? (
+                          experience[0]
+                        ) : (
+                          <Icon name="question" />
+                        )}
                       </Segment>
-                      <Segment>Graduated in: {experience[2]}</Segment>
+                      <Segment>
+                        Graduated in:{' '}
+                        {displayInformation ? (
+                          experience[2]
+                        ) : (
+                          <Icon name="question" />
+                        )}
+                      </Segment>
                       <Segment>{this.generateExperience(experience)}</Segment>
                     </Segment.Group>
                   );
@@ -208,20 +266,44 @@ export default class SingleUserView extends Component {
           </Segment.Group>
 
           <Segment.Group>
-            <Header>Experience</Header>
+            <Header>Work Experience</Header>
             {experienceData.length ? (
               experienceData
                 .filter(experience => experience[5] === true)
                 .map((experience, index) => {
                   return (
                     <Segment.Group key={index}>
-                      <Segment>{experience[0]}</Segment>
-                      <Segment.Group horizontal>
+                      <Segment
+                        className="ui header"
+                        style={{
+                          border: '2px solid white',
+                        }}
+                      >
+                        {displayInformation ? (
+                          experience[0]
+                        ) : (
+                          <Icon name="question" />
+                        )}
+                      </Segment>
+                      <Segment.Group
+                        horizontal
+                        style={{
+                          marginLeft: '6em',
+                          borderBottom: '2px solid white',
+                        }}
+                      >
                         <Segment>{experience[1]}</Segment>
                         <Segment>
-                          {experience[2] === "2019"
-                            ? "Currently Employed"
-                            : `Worked in: ${experience[2]}`}
+                          {displayInformation ? (
+                            experience[2] ===
+                            new Date().getFullYear().toString() ? (
+                              'Currently Employed'
+                            ) : (
+                              `Worked in: ${experience[2]}`
+                            )
+                          ) : (
+                            <Icon name="question" />
+                          )}
                         </Segment>
                         <Segment>{this.generateExperience(experience)}</Segment>
                       </Segment.Group>
@@ -232,6 +314,26 @@ export default class SingleUserView extends Component {
               <Segment>No experience</Segment>
             )}
           </Segment.Group>
+        </div>
+
+        <div className="ui divider" />
+        <div>
+          <Skills
+            skills={skills}
+            drizzle={drizzle}
+            drizzleState={drizzleState}
+            pageAddress={pageAddress}
+          />
+        </div>
+
+        <div className="ui divider" />
+        <div>
+          <Feedback
+            skills={skills}
+            drizzle={drizzle}
+            drizzleState={drizzleState}
+            pageAddress={pageAddress}
+          />
         </div>
       </div>
     );
