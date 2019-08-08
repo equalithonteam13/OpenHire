@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { Loader, Dimmer } from 'semantic-ui-react'
+import React, { Component } from "react";
+import { Card, Loader, Dimmer } from "semantic-ui-react";
 
 export default class OrgProfileComponent extends Component {
   constructor() {
@@ -8,7 +8,7 @@ export default class OrgProfileComponent extends Component {
       orgName: null,
       orgEmail: null,
       orgVerified: null,
-      loading: true,
+      loading: true
     };
   }
 
@@ -31,26 +31,28 @@ export default class OrgProfileComponent extends Component {
     } else {
       this.setState({
         loading: false
-      })
+      });
     }
-    
   };
 
   render() {
     if (this.state.loading) {
       return (
         <Dimmer active>
-          <Loader >Loading...</Loader>
+          <Loader>Loading...</Loader>
         </Dimmer>
-      )
-    }    
+      );
+    }
     if (this.state.orgName) {
       return (
         <div>
-          <hr />
-          <h1>Organization Profile View</h1>
-          <h5>Name: {this.state.orgName}</h5>
-          <h5>Email Address: {this.state.orgEmail}</h5>
+          <Card style={{ width: "500px" }}>
+            <Card.Content header={this.state.orgName} />
+            <Card.Content description={this.state.orgEmail} />
+            <Card.Content extra>
+              <p>{this.props.match.params.address}</p>
+            </Card.Content>
+          </Card>
         </div>
       );
     }

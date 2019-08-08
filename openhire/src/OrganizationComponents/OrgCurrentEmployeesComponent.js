@@ -16,7 +16,6 @@ export default class OrgCurrentEmployeesComponent extends Component {
     // TODO: fix this!!! to current account
     const currentLoggedInAddressArray = await drizzle.web3.eth.getAccounts();
     const currentLoggedInAddress = currentLoggedInAddressArray[0];
-    console.log(currentLoggedInAddress);
 
     // console.log(drizzle.contracts.OpenHire.methods)
     const userAddressesArrayLength = await drizzle.contracts.OpenHire.methods
@@ -41,8 +40,6 @@ export default class OrgCurrentEmployeesComponent extends Component {
           const experience = await drizzle.contracts.OpenHire.methods
             .getExperience(userAddress, expIndex)
             .call();
-          console.log(userAddress, experience);
-          console.log(experience[2] == new Date().getFullYear());
           if (experience[2].toString() == new Date().getFullYear()) {
             const CURRENT_EMPLOYEE_INFO = {
               name: userStruct[0],
@@ -60,16 +57,12 @@ export default class OrgCurrentEmployeesComponent extends Component {
   }
 
   render() {
-    console.log("this.props", this.props);
-    // fetch all users
-    // filter users by matching org address in experience
-    // have side toggle bar
-    // check all users for a pending approval
     let currentEmployees;
     if (this.state.CURRENT_EMPLOYEES) {
       currentEmployees = this.state.CURRENT_EMPLOYEES.map((employee, index) => {
         return (
           <Card
+            key={index}
             href={`/user/${employee.ethereumAddress}`}
             header={employee.name}
             description={employee.emailAddress}
@@ -80,9 +73,6 @@ export default class OrgCurrentEmployeesComponent extends Component {
               width: "500px"
             }}
           />
-          //   <li key={index}>
-          // {employee.name}, {employee.emailAddress}, {employee.ethereumAddress}
-          //   </li>
         );
       });
     }
