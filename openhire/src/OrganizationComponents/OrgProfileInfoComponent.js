@@ -46,11 +46,18 @@ export default class OrgProfileComponent extends Component {
     if (this.state.orgName) {
       return (
         <div>
-          <Card style={{ width: "500px" }}>
-            <Card.Content header={this.state.orgName} />
-            <Card.Content description={this.state.orgEmail} />
+          <Card
+            style={{
+              width: "500px",
+              backgroundColor: "#e0e1e2"
+            }}
+          >
+            <Card.Content header={`Name: ${this.state.orgName}`} />
+            <Card.Content description={`Email: ${this.state.orgEmail}`} />
             <Card.Content extra>
-              <p>{this.props.match.params.address}</p>
+              <p style={{ color: "black" }}>
+                Ethereum Address: {this.props.match.params.address}
+              </p>
             </Card.Content>
           </Card>
         </div>

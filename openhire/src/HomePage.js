@@ -7,6 +7,12 @@ import React, { Component } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+
+import OrgProfileContainerComponent from "./OrganizationComponents/OrgProfileContainerComponent";
+import SingleUserView from "./UserComponents/SingleUserView";
+import SplashPage from "./SplashPage";
+import { Menu } from "semantic-ui-react";
+
 import OrgProfileComponent from "./OrganizationComponents/OrgProfileInfoComponent";
 import SingleUserView from "./UserComponents/SingleUserView";
 import SplashPage from "./SplashPage";
@@ -78,7 +84,7 @@ export default class HomePage extends Component {
             exact
             path="/organization/:address"
             render={props => (
-              <OrgProfileComponent
+              <OrgProfileContainerComponent
                 {...props}
                 drizzle={drizzle}
                 drizzleState={drizzleState}
@@ -86,10 +92,10 @@ export default class HomePage extends Component {
             )}
           />
 
-          {/* <Route exact path='/organization/:address' component={OrgProfileComponent} drizzle={drizzle} drizzleState={drizzleState}></Route> */}
-          {/* <Route path='*' render={<h4>No Route Found!</h4>}></Route> */}
+          <Route path="*" render={<h4>No Route Found!</h4>} />
         </Switch>
-        <Footer />
+          <Footer />
+
       </div>
     );
   }

@@ -1,3 +1,8 @@
+.root {
+  --green-color: #01ba98;
+  --grey-color: #e0e1e2;
+}
+
 body {
   background-color: #2d2d2a;
 }
@@ -163,7 +168,21 @@ p {
 .org-view-container {
   margin: auto;
   width: 80%;
+   height: 100vh;
 }
+
+.footer {
+  height: 100px;
+}
+
+.orgCard {
+  background-color: var(--grey-color);
+}
+
+h1 {
+  color: white;
+}
+
 
 .footer {
   height: 80px;
@@ -185,3 +204,4 @@ p {
 .dev > a:hover {
   text-decoration: underline;
 }
+ 

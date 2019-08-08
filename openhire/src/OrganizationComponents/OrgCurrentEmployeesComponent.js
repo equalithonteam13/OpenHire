@@ -31,26 +31,29 @@ export default class OrgCurrentEmployeesComponent extends Component {
         .getUserData(userAddress)
         .call();
 
-      if (userStruct[2].includes(currentLoggedInAddress)) {
-        const experienceLength = await drizzle.contracts.OpenHire.methods
-          .getExperienceLength(userAddress)
-          .call();
+      console.log("userstruct>>>", userStruct);
 
-        for (let expIndex = 0; expIndex < experienceLength; expIndex++) {
-          const experience = await drizzle.contracts.OpenHire.methods
-            .getExperience(userAddress, expIndex)
-            .call();
-          if (experience[2].toString() == new Date().getFullYear()) {
-            const CURRENT_EMPLOYEE_INFO = {
-              name: userStruct[0],
-              emailAddress: userStruct[1],
-              ethereumAddress: userAddress
-            };
-            CURRENT_EMPLOYEES.push(CURRENT_EMPLOYEE_INFO);
-          }
+      // if (userStruct[2].includes(currentLoggedInAddress)) {
+      const experienceLength = await drizzle.contracts.OpenHire.methods
+        .getExperienceLength(userAddress)
+        .call();
+
+      for (let expIndex = 0; expIndex < experienceLength; expIndex++) {
+        const experience = await drizzle.contracts.OpenHire.methods
+          .getExperience(userAddress, expIndex)
+          .call();
+        console.log(experience);
+        if (experience[2].toString() == new Date().getFullYear()) {
+          const CURRENT_EMPLOYEE_INFO = {
+            name: userStruct[0],
+            emailAddress: userStruct[1],
+            ethereumAddress: userAddress
+          };
+          CURRENT_EMPLOYEES.push(CURRENT_EMPLOYEE_INFO);
         }
       }
     }
+    // }
     this.setState({
       CURRENT_EMPLOYEES
     });
@@ -70,7 +73,8 @@ export default class OrgCurrentEmployeesComponent extends Component {
             color="teal"
             className="orgCard"
             style={{
-              width: "500px"
+              width: "500px",
+              backgroundColor: "#e0e1e2"
             }}
           />
         );
