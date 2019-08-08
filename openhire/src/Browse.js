@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  Button,
-  Form,
-  Input,
-  Label,
-  Checkbox,
-  Segment
-} from "semantic-ui-react";
+import { Button, Form, Input, Label, Checkbox, Icon } from "semantic-ui-react";
 // Checkbox, Label, Icon
 
 export default class Browse extends React.Component {
@@ -18,14 +11,13 @@ export default class Browse extends React.Component {
       skillsToSearch: [],
       majorToSearch: "",
       searchResult: [],
-      numberOfSearches: 0,
       loading: false,
-      errorMessage: ""
+      errorMessage: "",
+      showAll: true
     };
   }
 
   async componentDidMount() {
-    console.log("props", this.props);
     const { drizzle } = this.props;
     let loop = true;
     let index = 0;
@@ -66,7 +58,6 @@ export default class Browse extends React.Component {
         user[3] = userSkills;
         //attach userAddress to user object
         user["userAddress"] = userAddress;
-        console.log(user);
         users.push(user);
         index++;
       } catch (error) {
@@ -124,9 +115,7 @@ export default class Browse extends React.Component {
         }
       }
     }
-    const numberOfSearches = this.state.numberOfSearches + 1;
     this.setState({
-      numberOfSearches: numberOfSearches,
       searchResult: results,
       showAll: false,
       majorToSearch: ""
@@ -157,13 +146,7 @@ export default class Browse extends React.Component {
   };
 
   render() {
-    const {
-      skillsToSearch,
-      searchResult,
-      allUsers,
-      numberOfSearches,
-      showAll
-    } = this.state;
+    const { skillsToSearch, searchResult, allUsers, showAll } = this.state;
 
     return (
       <div className="browse">
@@ -191,6 +174,7 @@ export default class Browse extends React.Component {
               />
             </div>
           </div>
+          <br />
           <Form className="browseForm">
             <Input
               key="majorToSearch"
@@ -213,11 +197,14 @@ export default class Browse extends React.Component {
             <ul>
               {skillsToSearch.map((skill, index) => {
                 return (
-                  <Label
-                    key={index}
-                    onClick={() => this.removeSkillToSearch(index)}
-                  >
-                    X {skill}
+                  <Label key={index}>
+                    <Icon
+                      name="delete"
+                      link
+                      onClick={() => this.removeSkillToSearch(index)}
+                    />
+                    {"  "}
+                    {skill}
                   </Label>
                 );
               })}
@@ -233,7 +220,7 @@ export default class Browse extends React.Component {
           </Form>
         </div>
         <div className="browseResults">
-          {numberOfSearches === 0 || showAll
+          {showAll
             ? allUsers.map((user, index) => {
                 return (
                   <div
@@ -257,7 +244,9 @@ export default class Browse extends React.Component {
                     className="results"
                     key={index}
                     onClick={() =>
-                      this.props.props.history.push(`/user/${user[4]}`)
+                      this.props.props.history.push(
+                        `/user/${user["userAddress"]}`
+                      )
                     }
                   >
                     <div> {user["userAddress"]}</div>
