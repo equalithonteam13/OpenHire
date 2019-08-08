@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  Button,
-  Form,
-  Input,
-  Label,
-  Checkbox,
-  Segment
-} from "semantic-ui-react";
+import { Button, Form, Input, Label, Checkbox, Icon } from "semantic-ui-react";
 // Checkbox, Label, Icon
 
 export default class Browse extends React.Component {
@@ -213,11 +206,14 @@ export default class Browse extends React.Component {
             <ul>
               {skillsToSearch.map((skill, index) => {
                 return (
-                  <Label
-                    key={index}
-                    onClick={() => this.removeSkillToSearch(index)}
-                  >
-                    X {skill}
+                  <Label key={index}>
+                    <Icon
+                      name="delete"
+                      link
+                      onClick={() => this.removeSkillToSearch(index)}
+                    />
+                    {"  "}
+                    {skill}
                   </Label>
                 );
               })}
@@ -257,7 +253,9 @@ export default class Browse extends React.Component {
                     className="results"
                     key={index}
                     onClick={() =>
-                      this.props.props.history.push(`/user/${user[4]}`)
+                      this.props.props.history.push(
+                        `/user/${user["userAddress"]}`
+                      )
                     }
                   >
                     <div> {user["userAddress"]}</div>
