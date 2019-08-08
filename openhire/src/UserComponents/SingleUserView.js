@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Skills from './Skills';
 import ExperienceForm from './ExperienceForm';
 
-import { Header, Segment } from 'semantic-ui-react';
+import { Header, Segment, Icon } from 'semantic-ui-react';
 
 export default class SingleUserView extends Component {
   constructor() {
@@ -13,6 +13,7 @@ export default class SingleUserView extends Component {
       name: '',
       email: '',
       experienceData: [],
+      experienceCount: 0,
       ownPage: false,
       skillsListLength: 0,
       skills: [],
@@ -21,6 +22,12 @@ export default class SingleUserView extends Component {
 
   async componentDidMount() {
     this.updatePage();
+
+    //Run to verify organization
+    // const address = (await this.props.drizzle.web3.eth.getAccounts())[0];
+    // await this.props.drizzle.contracts.OpenHire.methods
+    //   .verifyOrganization(address)
+    //   .send({ from: address });
   }
 
   componentDidUpdate = prevProps => {
@@ -69,6 +76,24 @@ export default class SingleUserView extends Component {
     );
   }
 
+  fetchExperienceData = async updatedCount => {
+    const { experienceCount, pageAddress } = this.state;
+    let experienceNumber = updatedCount || experienceCount;
+    const experienceDataArray = [];
+    for (let i = 0; i < experienceNumber; i++) {
+      let experienceData = await this.props.drizzle.contracts.OpenHire.methods
+        .getExperience(pageAddress, i)
+        .call();
+      experienceData.index = i;
+      experienceDataArray.push(experienceData);
+    }
+
+    this.setState({
+      experienceCount: updatedCount,
+      experienceData: experienceDataArray,
+    });
+  };
+
   updateExperience = () => {
     const { drizzleState } = this.props;
     const keys = Object.keys(drizzleState.contracts.OpenHire.getUserData);
@@ -95,21 +120,34 @@ export default class SingleUserView extends Component {
     }
   };
 
-  fetchExperienceData = async updatedCount => {
-    const { experienceCount, pageAddress } = this.state;
-    let experienceNumber = updatedCount || experienceCount;
-    const experienceDataArray = [];
-    for (let i = 0; i < experienceNumber; i++) {
-      let experienceData = await this.props.drizzle.contracts.OpenHire.methods
-        .getExperience(pageAddress, i)
-        .call();
-      experienceDataArray.push(experienceData);
-    }
+  verifyExperience = async index => {
+    const { pageAddress, userAddress } = this.state;
 
-    this.setState({
-      experienceCount: updatedCount,
-      experienceData: experienceDataArray,
-    });
+    await this.props.drizzle.contracts.OpenHire.methods
+      .verifyExperience(pageAddress, index)
+      .send({ from: userAddress });
+  };
+
+  generateExperience = experience => {
+    if (experience[3]) {
+      return (
+        <Icon name="check circle outline" className="green">
+          Verified
+        </Icon>
+      );
+    }
+    if (experience[4] === this.state.userAddress) {
+      return (
+        <Icon
+          name="check circle"
+          link
+          onClick={() => this.verifyExperience(experience.index)}
+        >
+          Unverified
+        </Icon>
+      );
+    }
+    return <Icon name="check circle">Unverified</Icon>;
   };
 
   render() {
@@ -139,7 +177,6 @@ export default class SingleUserView extends Component {
 
         <Segment.Group>
           <Header>Education</Header>
-
           {experienceData.length ? (
             experienceData
               .filter(experience => experience[5] === false)
@@ -150,18 +187,17 @@ export default class SingleUserView extends Component {
                       {experience[1]} from {experience[0]}
                     </Segment>
                     <Segment>Graduated in: {experience[2]}</Segment>
-                    <Segment>Verfied:{`${experience[3]}`}</Segment>
+                    <Segment>{this.generateExperience(experience)}</Segment>
                   </Segment.Group>
                 );
               })
           ) : (
-            <Segment>No experience</Segment>
+            <Segment>No Education</Segment>
           )}
         </Segment.Group>
 
         <Segment.Group>
           <Header>Experience</Header>
-
           {experienceData.length ? (
             experienceData
               .filter(experience => experience[5] === true)
@@ -176,7 +212,7 @@ export default class SingleUserView extends Component {
                           ? 'Currently Employed'
                           : `Worked in: ${experience[2]}`}
                       </Segment>
-                      <Segment>Verfied:{`${experience[3]}`}</Segment>
+                      <Segment>{this.generateExperience(experience)}</Segment>
                     </Segment.Group>
                   </Segment.Group>
                 );

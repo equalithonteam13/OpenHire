@@ -168,7 +168,7 @@ export default class ExperienceForm extends Component {
 
               <Form.Input
                 required
-                label={employer ? 'Role' : 'Field of Study'}
+                label={employer ? 'Job Title' : 'Field of Study'}
                 key="expertise"
                 name="expertise"
                 value={this.state.expertise}
