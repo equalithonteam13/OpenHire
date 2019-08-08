@@ -1,74 +1,77 @@
 body {
-	background-color: #2d2d2a;
+  background-color: #2d2d2a;
 }
 
 .App {
-	text-align: center;
+  text-align: center;
 }
 
 .App-logo {
-	animation: App-logo-spin infinite 20s linear;
-	height: 40vmin;
-	pointer-events: none;
+  animation: App-logo-spin infinite 20s linear;
+  height: 40vmin;
+  pointer-events: none;
 }
 
 .App-header {
-	background-color: #282c34;
+  background-color: #282c34;
 
-	min-height: 100vh;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	font-size: calc(10px + 2vmin);
-	color: white;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
 }
 
 .App-link {
-	color: #61dafb;
+  color: #61dafb;
 }
 
 @keyframes App-logo-spin {
-	from {
-		transform: rotate(0deg);
-	}
-	to {
-		transform: rotate(360deg);
-	}
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .browse {
-	display: flex;
-	justify-content: center;
-	height: 100vh;
+  display: flex;
+  justify-content: center;
+  height: 100vh;
 }
 
 .browseFilter {
-	display: flex;
-	flex: 1;
-	background-color: #2d2d2a;
-	flex-direction: column;
-	border-radius: 10px;
-	color: white;
-	text-decoration: underline;
+  display: flex;
+  flex: 1;
+  background-color: #2d2d2a;
+  flex-direction: column;
+  border-radius: 10px;
+  color: white;
+  text-decoration: underline;
 }
 
 .allLabels {
-	display: flex;
-	flex-direction: row;
-	justify-content: space-around;
-	margin-bottom: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  margin-bottom: 10px;
 }
 .label {
-	display: flex;
-	justify-content: flex-start;
-	align-items: center;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 .browseForm {
-	display: flex;
-	justify-content: center;
-	flex-direction: column;
+
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: 80%;
+  align-self: center;
 }
 
 .browseResults {
@@ -90,73 +93,73 @@ body {
 }
 
 .results:hover {
-	cursor: pointer;
+  cursor: pointer;
 }
 
 .ui.header:first-child {
-	margin: 15px 0 15px 10vh;
+  margin: 15px 0 15px 10vh;
 }
 
 .ui.menu {
-	margin-top: 0;
-	background-color: #01ba98;
+  margin-top: 0;
+  background-color: #01ba98;
 }
 
 .ui.compact.menu {
-	background-color: #282c34;
-	color: white;
+  background-color: #282c34;
+  color: white;
 }
 
 p {
-	color: white;
-	margin: 0;
+  color: white;
+  margin: 0;
 }
 
 .item {
-	background-color: white;
+  background-color: white;
 }
 
 .ui.items {
-	margin: 10vh;
-	color: white;
+  margin: 10vh;
+  color: white;
 }
 
 .resume-section {
-	padding-top: 20px;
+  padding-top: 20px;
 }
 
 .ui.header {
-	color: white;
+  color: white;
 }
 
 .ui.segment {
-	background-color: #2d2d2a;
+  background-color: #2d2d2a;
 }
 
 .ui.form {
-	color: white;
+  color: white;
 }
 
 .ui.placeholder.segment {
-	background-color: #2d2d2a;
-	height: 80vh;
-	margin: 10vh 0 10vh 0;
+  background-color: #2d2d2a;
+  height: 80vh;
+  margin: 10vh 0 10vh 0;
 }
 
 .ui.vertical.divider {
-	color: white;
+  color: white;
 }
 
 .ui.primary.button {
-	background-color: #01ba98;
+  background-color: #01ba98;
 }
 
 .ui.primary.button:hover {
-	background-color: #01ba98;
+  background-color: #01ba98;
 }
 
 .ui.form .field > label {
-	color: white;
+  color: white;
 }
 
 .org-view-container {
