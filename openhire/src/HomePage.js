@@ -7,11 +7,16 @@ import React, { Component } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+
 import OrgProfileContainerComponent from "./OrganizationComponents/OrgProfileContainerComponent";
 import SingleUserView from "./UserComponents/SingleUserView";
 import SplashPage from "./SplashPage";
 import { Menu } from "semantic-ui-react";
 
+import OrgProfileComponent from "./OrganizationComponents/OrgProfileInfoComponent";
+import SingleUserView from "./UserComponents/SingleUserView";
+import SplashPage from "./SplashPage";
+import Footer from "./Footer";
 export default class HomePage extends Component {
   constructor() {
     super();
@@ -89,7 +94,8 @@ export default class HomePage extends Component {
 
           <Route path="*" render={<h4>No Route Found!</h4>} />
         </Switch>
-        <Menu className="footer" />
+          <Footer />
+
       </div>
     );
   }

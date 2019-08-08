@@ -10,26 +10,30 @@ class NavBar extends Component {
   }
 
   async componentDidMount() {
-    const { drizzle, drizzleState } = this.props;
-    let user = await drizzle.contracts.OpenHire.methods
-      .getUserData(drizzleState.accounts[0])
-      .call();
-    //if address is not a user, check if it's an organization
-    if (!user[0]) {
-      user = await drizzle.contracts.OpenHire.methods
-        .getOrganization(drizzleState.accounts[0])
+    try {
+      const { drizzle, drizzleState } = this.props;
+      let user = await drizzle.contracts.OpenHire.methods
+        .getUserData(drizzleState.accounts[0])
         .call();
-      if (user[0]) {
+      //if address is not a user, check if it's an organization
+      if (!user[0]) {
+        user = await drizzle.contracts.OpenHire.methods
+          .getOrganization(drizzleState.accounts[0])
+          .call();
+        if (user[0]) {
+          this.setState({
+            loggedIn: true,
+            type: "org"
+          });
+        }
+      } else {
         this.setState({
           loggedIn: true,
-          type: "org"
+          type: "user"
         });
       }
-    } else {
-      this.setState({
-        loggedIn: true,
-        type: "user"
-      });
+    } catch (error) {
+      console.log(error);
     }
   }
 

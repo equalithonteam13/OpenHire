@@ -1,5 +1,13 @@
 import React from "react";
-import { Button, Form, Input, Label, Checkbox, Icon } from "semantic-ui-react";
+import {
+  Button,
+  Form,
+  Input,
+  Label,
+  Checkbox,
+  Icon,
+  Card
+} from "semantic-ui-react";
 // Checkbox, Label, Icon
 
 export default class Browse extends React.Component {
@@ -151,7 +159,7 @@ export default class Browse extends React.Component {
     return (
       <div className="browse">
         <div className="browseFilter">
-          <h1> Filters: </h1>
+          <h1 style={{ marginLeft: 10 }}> Filters: </h1>
           <div className="allLabels">
             <div className="label">
               <Button className="label" onClick={() => this.toggle("showAll")}>
