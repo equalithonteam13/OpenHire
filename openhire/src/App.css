@@ -158,3 +158,8 @@ p {
 .ui.form .field > label {
 	color: white;
 }
+
+.org-view-container {
+  margin: auto;
+  width: 80%;
+}
