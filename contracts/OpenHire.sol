@@ -57,6 +57,10 @@ contract OpenHire is Administrator {
         address[] endorsers;
     }
 
+    function getAllUsersLength() public view returns (uint) {
+        return allUserAddresses.length;
+    }
+
     function createOrganization(string memory name, string memory emailAddress) public {
         Organization memory newOrganization = Organization({
            name: name,
@@ -130,5 +134,9 @@ contract OpenHire is Administrator {
 
     function getExperience(address userAddress, uint index) public view returns (string memory, string memory, uint, bool) {
         return (allUsers[userAddress].experienceList[index].organization,allUsers[userAddress].experienceList[index].expertise,allUsers[userAddress].experienceList[index].duration,allUsers[userAddress].experienceList[index].verified);
+    }
+
+    function getExperienceLength(address userAddress) public view returns (uint) {
+        return allUsers[userAddress].experienceList.length;
     }
 }

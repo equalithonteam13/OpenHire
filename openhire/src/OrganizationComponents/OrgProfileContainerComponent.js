@@ -1,17 +1,14 @@
 import React, { Component } from 'react'
 import OrgProfileInfoComponent from './OrgProfileInfoComponent';
-import OrgPendingApprovalsComponent from './OrgPendingApprovalsComponent';
+import OrgCurrentEmployeesComponent from './OrgCurrentEmployeesComponent';
 
 export default class OrgProfileContainerComponent extends Component {
-    constructor() {
-        super();
-    }
     render() {
         return (
             <div>
                 <h1>Org profile container</h1>
                 <OrgProfileInfoComponent {...this.props} drizzle={this.props.drizzle} drizzleState={this.props.drizzleState}></OrgProfileInfoComponent>
-                <OrgPendingApprovalsComponent {...this.props} drizzle={this.props.drizzle} drizzleState={this.props.drizzleState}></OrgPendingApprovalsComponent>
+                <OrgCurrentEmployeesComponent {...this.props} drizzle={this.props.drizzle} drizzleState={this.props.drizzleState}></OrgCurrentEmployeesComponent>
             </div>
         )
     }
