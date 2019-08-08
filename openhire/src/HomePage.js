@@ -6,20 +6,20 @@ import Browse from './Browse';
 import React, { Component } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Header } from 'semantic-ui-react';
 
 import SingleUserView from './UserComponents/SingleUserView';
 import SplashPage from './SplashPage';
 import OrgProfileContainerComponent from './OrganizationComponents/OrgProfileContainerComponent';
 
 export default class HomePage extends Component {
-  constructor() {
-    super();
-    this.state = {};
-  }
+	constructor() {
+		super();
+		this.state = {};
+	}
 
-  render() {
-    const { drizzle, drizzleState } = this.props;
+	render() {
+		const { drizzle, drizzleState } = this.props;
+
 
     return (
       <div>
@@ -89,11 +89,7 @@ export default class HomePage extends Component {
               />
             )}
           />
-
-          {/* <Route exact path='/organization/:address' component={OrgProfileComponent} drizzle={drizzle} drizzleState={drizzleState}></Route> */}
-          {/* <Route path='*' render={<h4>No Route Found!</h4>}></Route> */}
-        </Switch>
-      </div>
-    );
-  }
+			</div>
+		);
+	}
 }

@@ -1,15 +1,7 @@
 import React, { Component } from 'react';
 import { toast, Flip } from 'react-toastify';
 
-import {
-  Button,
-  Form,
-  Icon,
-  Menu,
-  Label,
-  Modal,
-  Header,
-} from 'semantic-ui-react';
+import { Button, Form, Icon, Menu, Label, Modal, Header } from 'semantic-ui-react';
 
 export default class Skills extends Component {
   constructor(props) {
@@ -50,7 +42,6 @@ export default class Skills extends Component {
 
     let ownPage = false;
 
-    //props.pageAddress is passing in as all lowercase
     if (userAddress === this.props.pageAddress) {
       ownPage = true;
     }
@@ -149,10 +140,8 @@ export default class Skills extends Component {
     const skillsCount = this.updateSkillCount();
     this.fetchSkillData(skillsCount);
 
-    // console.log(this.state);
-
     return (
-      <div>
+      <div className="resume-section">
         <h2>
           Skills{' '}
           {ownPage ? (

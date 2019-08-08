@@ -1,5 +1,12 @@
-import React from 'react';
-import { Button, Form, Input } from 'semantic-ui-react';
+import React from "react";
+import {
+  Button,
+  Form,
+  Input,
+  Label,
+  Checkbox,
+  Segment
+} from "semantic-ui-react";
 // Checkbox, Label, Icon
 
 export default class Browse extends React.Component {
@@ -7,16 +14,18 @@ export default class Browse extends React.Component {
     super();
     this.state = {
       allUsers: [],
-      currentSkill: '',
+      currentSkill: "",
       skillsToSearch: [],
+      majorToSearch: "",
       searchResult: [],
       numberOfSearches: 0,
       loading: false,
-      errorMessage: '',
+      errorMessage: ""
     };
   }
 
   async componentDidMount() {
+    console.log("props", this.props);
     const { drizzle } = this.props;
     let loop = true;
     let index = 0;
@@ -45,8 +54,19 @@ export default class Browse extends React.Component {
           //store only the name of the skill in userSkills array
           userSkills.push(skill[0]);
         }
+        //array of experiences
+        user["experience"] = [];
+        for (let i = 0; i < user[2]; i++) {
+          let experience = await this.props.drizzle.contracts.OpenHire.methods
+            .getExperience(userAddress, i)
+            .call();
+          user["experience"].push(experience);
+        }
         //attach all of userSkills to user object
         user[3] = userSkills;
+        //attach userAddress to user object
+        user["userAddress"] = userAddress;
+        console.log(user);
         users.push(user);
         index++;
       } catch (error) {
@@ -59,36 +79,57 @@ export default class Browse extends React.Component {
 
   handleOnChange = event => {
     this.setState({
-      [event.target.name]: event.target.value,
+      [event.target.name]: event.target.value
     });
   };
 
   handleOnSubmit = async event => {
     event.preventDefault();
 
-    const { allUsers, skillsToSearch } = this.state;
+    const { allUsers, skillsToSearch, majorToSearch } = this.state;
 
-    let results = [];
-
-    for (let i = 0; i < allUsers.length; i++) {
-      const userSkills = allUsers[i][3];
-      for (let j = 0; j < skillsToSearch.length; j++) {
-        //if current user being checked does not have skill,
-        if (!userSkills.includes(skillsToSearch[j])) {
-          break;
-        }
-        //if current user contains all skills that is being searched, add user to results array
-        if (j === skillsToSearch.length - 1) {
-          results.push(allUsers[i]);
+    let results = skillsToSearch.length ? [] : [...allUsers];
+    //find users that match skills to search
+    if (skillsToSearch.length) {
+      for (let i = 0; i < allUsers.length; i++) {
+        const userSkills = allUsers[i][3];
+        for (let j = 0; j < skillsToSearch.length; j++) {
+          //if current user being checked does not have skill,
+          if (!userSkills.includes(skillsToSearch[j])) {
+            break;
+          }
+          //if current user contains all skills that is being searched, add user to results array
+          if (j === skillsToSearch.length - 1) {
+            results.push(allUsers[i]);
+          }
         }
       }
     }
 
+    //find users that match college major to search
+    if (majorToSearch) {
+      const major = majorToSearch.toLowerCase();
+      for (let i = 0; i < results.length; i++) {
+        const numOfUserExperiences = results[i][2];
+        let userMatchesMajor = false;
+        for (let j = 0; j < numOfUserExperiences; j++) {
+          if (results[i]["experience"][j][1].toLowerCase().includes(major)) {
+            userMatchesMajor = true;
+            break;
+          }
+        }
+        //if user does not match the major to search, remove it from results array
+        if (!userMatchesMajor) {
+          results.splice(i, 1);
+        }
+      }
+    }
     const numberOfSearches = this.state.numberOfSearches + 1;
     this.setState({
       numberOfSearches: numberOfSearches,
       searchResult: results,
-      skillsToSearch: [],
+      showAll: false,
+      majorToSearch: ""
     });
   };
 
@@ -96,8 +137,22 @@ export default class Browse extends React.Component {
     let skillsToSearch = this.state.skillsToSearch;
     skillsToSearch.push(this.state.currentSkill);
     this.setState({
-      currentSkill: '',
-      skillsToSearch: skillsToSearch,
+      currentSkill: "",
+      skillsToSearch: skillsToSearch
+    });
+  };
+
+  removeSkillToSearch = index => {
+    let skillsToSearch = this.state.skillsToSearch.filter(
+      (skill, idx) => idx !== index
+    );
+    this.setState({
+      skillsToSearch: skillsToSearch
+    });
+  };
+  toggle = name => {
+    this.setState({
+      [name]: !this.state[name]
     });
   };
 
@@ -107,53 +162,111 @@ export default class Browse extends React.Component {
       searchResult,
       allUsers,
       numberOfSearches,
+      showAll
     } = this.state;
+
     return (
-      <div>
-        <h1> BROWSE </h1>
-        <Form onSubmit={this.handleOnSubmit}>
-          <Input
-            key="currentSkill"
-            name="currentSkill"
-            value={this.state.currentSkill}
-            placeholder="Search"
-            onChange={this.handleOnChange}
-          />
-          <Button type="button" onClick={this.addSkillToSearch}>
-            Add Skill
-          </Button>
+      <div className="browse">
+        <div className="browseFilter">
+          <h1> Filters: </h1>
+          <div className="allLabels">
+            <div className="label">
+              <Button className="label" onClick={() => this.toggle("showAll")}>
+                Show All
+              </Button>
+            </div>
+            <div className="label">
+              <Label className="label">Name</Label>
+              <Checkbox
+                checked={this.state.displayName}
+                onClick={() => this.toggle("displayName")}
+              />
+            </div>
 
-          <ul>
-            {skillsToSearch.map((skill, index) => {
-              return <li key={index}>{skill}</li>;
-            })}
-          </ul>
-          <Button
-            type="submit"
-            disabled={this.state.loading}
-            loading={this.state.loading}
-          >
-            Search
-          </Button>
-        </Form>
-
-        {numberOfSearches === 0
-          ? allUsers.map((user, index) => {
-              return (
-                <div key={index}>
-                  {' '}
-                  Name: {user[0]} Email: {user[1]}{' '}
-                </div>
-              );
-            })
-          : searchResult.map((user, index) => {
-              return (
-                <div key={index}>
-                  {' '}
-                  Name: {user[0]} Email: {user[1]}{' '}
-                </div>
-              );
-            })}
+            <div className="label">
+              <Label>Email</Label>
+              <Checkbox
+                checked={this.state.displayEmail}
+                onClick={() => this.toggle("displayEmail")}
+              />
+            </div>
+          </div>
+          <Form className="browseForm">
+            <Input
+              key="majorToSearch"
+              name="majorToSearch"
+              value={this.state.majorToSearch}
+              placeholder="Search for College Major"
+              onChange={this.handleOnChange}
+            />
+            <br />
+            <Input
+              key="currentSkill"
+              name="currentSkill"
+              value={this.state.currentSkill}
+              placeholder="Add Skill to Search"
+              onChange={this.handleOnChange}
+            />
+            <Button type="button" onClick={this.addSkillToSearch}>
+              Add Skill
+            </Button>
+            <ul>
+              {skillsToSearch.map((skill, index) => {
+                return (
+                  <Label
+                    key={index}
+                    onClick={() => this.removeSkillToSearch(index)}
+                  >
+                    X {skill}
+                  </Label>
+                );
+              })}
+            </ul>
+            <Button
+              onClick={this.handleOnSubmit}
+              type="submit"
+              disabled={this.state.loading}
+              loading={this.state.loading}
+            >
+              Search
+            </Button>
+          </Form>
+        </div>
+        <div className="browseResults">
+          {numberOfSearches === 0 || showAll
+            ? allUsers.map((user, index) => {
+                return (
+                  <div
+                    className="results"
+                    key={index}
+                    onClick={() =>
+                      this.props.props.history.push(
+                        `/user/${user["userAddress"]}`
+                      )
+                    }
+                  >
+                    <div> {user["userAddress"]}</div>
+                    <div> {this.state.displayName ? user[0] : ""}</div>
+                    <div> {this.state.displayEmail ? user[1] : ""} </div>
+                  </div>
+                );
+              })
+            : searchResult.map((user, index) => {
+                return (
+                  <div
+                    className="results"
+                    key={index}
+                    onClick={() =>
+                      this.props.props.history.push(`/user/${user[4]}`)
+                    }
+                  >
+                    <div> {user["userAddress"]}</div>
+                    <div> {this.state.displayName ? user[0] : ""}</div>
+                    <div> {this.state.displayEmail ? user[1] : ""} </div>
+                  </div>
+                );
+              })}
+        </div>
       </div>
     );
   }
