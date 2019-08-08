@@ -88,13 +88,21 @@ body {
 
 .ui.menu {
 	margin-top: 0;
-	/* padding-top: 14px; */
 	background-color: #01ba98;
 }
 
 .ui.compact.menu {
 	background-color: #282c34;
 	color: white;
+}
+
+p {
+	color: white;
+	margin: 0;
+}
+
+.item {
+	background-color: white;
 }
 
 .ui.items {
@@ -104,8 +112,6 @@ body {
 
 .resume-section {
 	padding-top: 20px;
-
-	/* display: flex; */
 }
 
 .ui.header {

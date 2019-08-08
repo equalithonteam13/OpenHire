@@ -171,7 +171,7 @@ export default class Skills extends Component {
 					{skillsArray.map((skill, index) => {
 						return (
 							<Menu.Item key={index}>
-								{skill[0]}
+								<p>{skill[0]}</p>
 
 								<Modal
 									trigger={
