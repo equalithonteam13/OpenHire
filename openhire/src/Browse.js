@@ -11,14 +11,13 @@ export default class Browse extends React.Component {
       skillsToSearch: [],
       majorToSearch: "",
       searchResult: [],
-      numberOfSearches: 0,
       loading: false,
-      errorMessage: ""
+      errorMessage: "",
+      showAll: true
     };
   }
 
   async componentDidMount() {
-    console.log("props", this.props);
     const { drizzle } = this.props;
     let loop = true;
     let index = 0;
@@ -116,9 +115,7 @@ export default class Browse extends React.Component {
         }
       }
     }
-    const numberOfSearches = this.state.numberOfSearches + 1;
     this.setState({
-      numberOfSearches: numberOfSearches,
       searchResult: results,
       showAll: false,
       majorToSearch: ""
@@ -149,13 +146,7 @@ export default class Browse extends React.Component {
   };
 
   render() {
-    const {
-      skillsToSearch,
-      searchResult,
-      allUsers,
-      numberOfSearches,
-      showAll
-    } = this.state;
+    const { skillsToSearch, searchResult, allUsers, showAll } = this.state;
 
     return (
       <div className="browse">
@@ -229,7 +220,7 @@ export default class Browse extends React.Component {
           </Form>
         </div>
         <div className="browseResults">
-          {numberOfSearches === 0 || showAll
+          {showAll
             ? allUsers.map((user, index) => {
                 return (
                   <div
