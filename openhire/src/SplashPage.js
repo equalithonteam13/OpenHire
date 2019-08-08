@@ -21,6 +21,31 @@ class SplashPage extends React.Component {
   }
 
   async componentDidMount() {
+    try {
+      const { drizzle, drizzleState } = this.props;
+      let user = await drizzle.contracts.OpenHire.methods
+        .getUserData(drizzleState.accounts[0])
+        .call();
+      //if address is not a user, check if it's an organization
+      if (!user[0]) {
+        user = await drizzle.contracts.OpenHire.methods
+          .getOrganization(drizzleState.accounts[0])
+          .call();
+        if (user[0]) {
+          this.setState({
+            loggedIn: true,
+            type: "org"
+          });
+        }
+      } else {
+        this.setState({
+          loggedIn: true,
+          type: "user"
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
     const { drizzle, drizzleState } = this.props;
     let user = await drizzle.contracts.OpenHire.methods
       .getUserData(drizzleState.accounts[0])
