@@ -234,7 +234,8 @@ export default class Skills extends Component {
                         })}
                       </Modal.Content>
                       <Modal.Actions>
-                        {skill[1].includes(this.state.userAddress) ? (
+                        {skill[1].includes(this.state.userAddress) ||
+                        this.pageAddress === this.userAddress ? (
                           <Button disabled={true}>
                             <Icon name="check" /> Endorsed
                           </Button>
