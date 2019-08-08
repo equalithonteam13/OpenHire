@@ -6,11 +6,20 @@ import { withRouter } from "react-router-dom";
 class NavBar extends Component {
   constructor() {
     super();
-    this.state = { activeItem: "Home", type: "" };
+    this.state = { activeItem: "Home", type: "", user: {} };
+  }
+
+  async componentDidMount() {
+    const { drizzle, drizzleState } = this.props;
+    const user = await drizzle.contracts.OpenHire.methods
+      .getUserData(drizzleState.accounts[0])
+      .call();
+    this.setState({
+      user: user
+    });
   }
 
   handleItemClick = name => {
-    console.log("name ", name);
     this.setState({ activeItem: name });
   };
 
@@ -39,9 +48,8 @@ class NavBar extends Component {
   };
 
   render() {
-    let { activeItem, type } = this.state;
+    const { activeItem, type, user } = this.state;
     const { drizzle, drizzleState } = this.props;
-
     return (
       <Menu>
         <Header as="h1" position="center">
@@ -65,7 +73,7 @@ class NavBar extends Component {
               return this.handleItemClick("Browse");
             }}
           />
-          {drizzleState.accounts[0] ? (
+          {user[0] ? (
             <Menu.Item
               name="Profile"
               active={activeItem === "Profile"}
