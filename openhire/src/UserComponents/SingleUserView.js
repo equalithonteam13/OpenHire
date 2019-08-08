@@ -1,22 +1,22 @@
-import React, { Component } from 'react';
-import Skills from './Skills';
-import ExperienceForm from './ExperienceForm';
+import React, { Component } from "react";
+import Skills from "./Skills";
+import ExperienceForm from "./ExperienceForm";
 
-import { Header, Segment, Icon } from 'semantic-ui-react';
+import { Header, Segment, Icon } from "semantic-ui-react";
 
 export default class SingleUserView extends Component {
   constructor() {
     super();
     this.state = {
-      userAddress: '',
-      pageAddress: '',
-      name: '',
-      email: '',
+      userAddress: "",
+      pageAddress: "",
+      name: "",
+      email: "",
       experienceData: [],
       experienceCount: 0,
       ownPage: false,
       skillsListLength: 0,
-      skills: [],
+      skills: []
     };
   }
 
@@ -70,7 +70,7 @@ export default class SingleUserView extends Component {
         name: userData[0],
         email: userData[1],
         experienceCount: userData[2],
-        ownPage: ownPage,
+        ownPage: ownPage
       },
       () => this.fetchExperienceData()
     );
@@ -90,7 +90,7 @@ export default class SingleUserView extends Component {
 
     this.setState({
       experienceCount: updatedCount,
-      experienceData: experienceDataArray,
+      experienceData: experienceDataArray
     });
   };
 
@@ -156,71 +156,83 @@ export default class SingleUserView extends Component {
     const pageAddress = this.props.props.match.params.address;
     this.updateExperience();
     return (
-      <div>
+      <div className="ui items">
         <h1>Single User View</h1>
-        <div>Address:{pageAddress}</div>
-        <div>Name:{name}</div>
-        <div>Email:{email}</div>
+        <div>
+          {" "}
+          <strong>Address:{pageAddress}</strong>
+        </div>
+        <div>
+          <strong> Name:{name} </strong>
+        </div>
+        <div>
+          <strong>Email:{email}</strong>
+        </div>
+        <div className="ui divider" />
+        <div>
+          <Skills
+            skills={skills}
+            drizzle={drizzle}
+            drizzleState={drizzleState}
+            pageAddress={pageAddress}
+          />
+        </div>
 
-        <Skills
-          skills={skills}
-          drizzle={drizzle}
-          drizzleState={drizzleState}
-          pageAddress={pageAddress}
-        />
+        <div className="ui divider" />
+        <div>
+          <ExperienceForm
+            drizzle={drizzle}
+            drizzleState={drizzleState}
+            pageAddress={pageAddress}
+          />
 
-        <ExperienceForm
-          drizzle={drizzle}
-          drizzleState={drizzleState}
-          pageAddress={pageAddress}
-        />
-
-        <Segment.Group>
-          <Header>Education</Header>
-          {experienceData.length ? (
-            experienceData
-              .filter(experience => experience[5] === false)
-              .map((experience, index) => {
-                return (
-                  <Segment.Group key={index} horizontal>
-                    <Segment>
-                      {experience[1]} from {experience[0]}
-                    </Segment>
-                    <Segment>Graduated in: {experience[2]}</Segment>
-                    <Segment>{this.generateExperience(experience)}</Segment>
-                  </Segment.Group>
-                );
-              })
-          ) : (
-            <Segment>No Education</Segment>
-          )}
-        </Segment.Group>
-
-        <Segment.Group>
-          <Header>Experience</Header>
-          {experienceData.length ? (
-            experienceData
-              .filter(experience => experience[5] === true)
-              .map((experience, index) => {
-                return (
-                  <Segment.Group key={index}>
-                    <Segment>{experience[0]}</Segment>
-                    <Segment.Group horizontal>
-                      <Segment>{experience[1]}</Segment>
+          <Segment.Group>
+            <Header>Education</Header>
+            {experienceData.length ? (
+              experienceData
+                .filter(experience => experience[5] === false)
+                .map((experience, index) => {
+                  return (
+                    <Segment.Group key={index} horizontal>
                       <Segment>
-                        {experience[2] === '2019'
-                          ? 'Currently Employed'
-                          : `Worked in: ${experience[2]}`}
+                        {experience[1]} from {experience[0]}
                       </Segment>
+                      <Segment>Graduated in: {experience[2]}</Segment>
                       <Segment>{this.generateExperience(experience)}</Segment>
                     </Segment.Group>
-                  </Segment.Group>
-                );
-              })
-          ) : (
-            <Segment>No experience</Segment>
-          )}
-        </Segment.Group>
+                  );
+                })
+            ) : (
+              <Segment>No Education</Segment>
+            )}
+          </Segment.Group>
+
+          <Segment.Group>
+            <Header>Experience</Header>
+            {experienceData.length ? (
+              experienceData
+                .filter(experience => experience[5] === true)
+                .map((experience, index) => {
+                  return (
+                    <Segment.Group key={index}>
+                      <Segment>{experience[0]}</Segment>
+                      <Segment.Group horizontal>
+                        <Segment>{experience[1]}</Segment>
+                        <Segment>
+                          {experience[2] === "2019"
+                            ? "Currently Employed"
+                            : `Worked in: ${experience[2]}`}
+                        </Segment>
+                        <Segment>{this.generateExperience(experience)}</Segment>
+                      </Segment.Group>
+                    </Segment.Group>
+                  );
+                })
+            ) : (
+              <Segment>No experience</Segment>
+            )}
+          </Segment.Group>
+        </div>
       </div>
     );
   }

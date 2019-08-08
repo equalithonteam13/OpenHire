@@ -1,15 +1,7 @@
 import React, { Component } from 'react';
 import { toast, Flip } from 'react-toastify';
 
-import {
-  Button,
-  Form,
-  Icon,
-  Menu,
-  Label,
-  Modal,
-  Header,
-} from 'semantic-ui-react';
+import { Button, Form, Icon, Menu, Label, Modal, Header } from 'semantic-ui-react';
 
 export default class Skills extends Component {
   constructor(props) {
@@ -149,7 +141,7 @@ export default class Skills extends Component {
     this.fetchSkillData(skillsCount);
 
     return (
-      <div>
+      <div className="resume-section">
         <h2>
           Skills{' '}
           {ownPage ? (

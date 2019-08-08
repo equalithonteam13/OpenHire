@@ -6,12 +6,12 @@ import { Button, Form, Icon, Checkbox, Label } from 'semantic-ui-react';
 import OrganizationSearchBar from '../OrganizationSearchBar';
 
 const defaultForm = {
-  address: '',
-  organization: '',
-  expertise: '',
-  duration: 0,
-  employer: false,
-  displayExperienceForm: false,
+	address: '',
+	organization: '',
+	expertise: '',
+	duration: 0,
+	employer: false,
+	displayExperienceForm: false
 };
 
 export default class ExperienceForm extends Component {
@@ -99,7 +99,7 @@ export default class ExperienceForm extends Component {
     const { drizzle, drizzleState } = this.props;
 
     return (
-      <div>
+      <div className="resume-section">>
         <h2>
           Experience{' '}
           {ownPage ? (
