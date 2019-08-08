@@ -53,6 +53,7 @@ contract OpenHire is Administrator {
     struct Skill {
         string name;
         address[] endorsers;
+        bool feedback;
     }
 
     function getAllUsersLength() public view returns (uint) {
@@ -101,17 +102,19 @@ contract OpenHire is Administrator {
 
     //Organizations verify User experience
     function verifyExperience(address userAddress, uint index) public {
-        require(allOrganizations[msg.sender].verified == true);
+        //Currently disabled admin features to only allow verified organiations
+        // require(allOrganizations[msg.sender].verified == true);
         allUsers[userAddress].experienceList[index].verified = true;
     }
 
-    function addSkill(string memory skillName) public {
+    function addSkill(address userAddress, string memory skillName, bool feedback) public {
         Skill memory newSkill = Skill({
             name: skillName,
-            endorsers: new address[](0)
+            endorsers: new address[](0),
+            feedback: feedback
         });
-        allUsers[msg.sender].skillsList.push(newSkill);
-        allUsers[msg.sender].skillsListLength++;
+        allUsers[userAddress].skillsList.push(newSkill);
+        allUsers[userAddress].skillsListLength++;
     }
 
     function getSkillListLength(address userAddress) public view returns (uint) {
@@ -126,8 +129,8 @@ contract OpenHire is Administrator {
         return (allUsers[userAddress].name, allUsers[userAddress].emailAddress, allUsers[userAddress].experienceList.length);
     }
 
-    function getUserSkillData(address userAddress, uint skillIndex) public view returns (string memory, address[] memory) {
-        return (allUsers[userAddress].skillsList[skillIndex].name,allUsers[userAddress].skillsList[skillIndex].endorsers);
+    function getUserSkillData(address userAddress, uint skillIndex) public view returns (string memory, address[] memory, bool) {
+        return (allUsers[userAddress].skillsList[skillIndex].name,allUsers[userAddress].skillsList[skillIndex].endorsers,allUsers[userAddress].skillsList[skillIndex].feedback);
     }
 
     function getExperience(address userAddress, uint index) public view returns (string memory, string memory, uint, bool, address, bool) {
