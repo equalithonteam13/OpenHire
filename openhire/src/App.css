@@ -66,27 +66,27 @@ body {
 }
 
 .browseForm {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
 }
 
 .browseResults {
-  display: flex;
-  flex: 2;
-  flex-direction: column;
-  background-color: lightgray;
-  border-radius: 10px;
-  align-items: center;
+	display: flex;
+	flex: 2;
+	flex-direction: column;
+	background-color: lightgray;
+	border-radius: 10px;
+	align-items: center;
 }
 
 .results {
-  display: flex;
-  justify-content: space-evenly;
-  margin-top: 15px;
-  margin-bottom: 15px;
-  border-bottom: 5px solid gray;
-  width: 90%;
+	display: flex;
+	justify-content: space-evenly;
+	margin-top: 15px;
+	margin-bottom: 15px;
+	border-bottom: 5px solid gray;
+	width: 90%;
 }
 
 .results:hover {
@@ -157,4 +157,12 @@ p {
 
 .ui.form .field > label {
 	color: white;
+}
+
+.skills {
+	/* margin: 30px; */
+}
+
+.ui.modal {
+	background-color: #2d2d2a;
 }
