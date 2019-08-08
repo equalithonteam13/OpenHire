@@ -166,3 +166,7 @@ p {
 .ui.modal {
 	background-color: #2d2d2a;
 }
+.org-view-container {
+	margin: auto;
+	width: 80%;
+}
