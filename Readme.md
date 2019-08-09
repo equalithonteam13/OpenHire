@@ -4,7 +4,7 @@ OpenHire
 
 **About**
 ----
-OpenHire is an Ethereum based dapp that that combats imposter syndrome by allowing an employer to better identify skilled employees without unconscious bias. By building on the Ethereum blockchain, OpenHire achieves immutable provenance of an employee's education, work experience, skills, and peer feedback by allowing the requisite party to validate each item. OpenHire then hides all personally identifiable information from an employee's resume page, while still allowing the employer to search by these criteria, reducing the possibility of unconscious bias. Our hope is that OpenHire will enable underrecognized women and minority experts a better opportunity to be discovered by the employer, benefiting all.
+OpenHire is an Ethereum based dapp (decentralized application) that combats imposter syndrome by allowing an employer to better identify skilled employees without unconscious bias. By building on the Ethereum blockchain, OpenHire achieves immutable provenance of an employee's education, work experience, skills, and peer feedback by allowing the requisite party to validate each item. OpenHire then hides all personally identifiable information from an employee's resume page, while still allowing the employer to search by these criteria, reducing the possibility of unconscious bias. Our hope is that OpenHire will enable underrecognized women and minority experts a better opportunity to be discovered by the employer, benefiting all.
 
 ![OpenHire Home Page](https://github.com/equalithonteam13/OpenHire/blob/master/readme/home_page_screenshot.jpg)
 
@@ -32,7 +32,7 @@ Many people suffer from an imposter syndrome, especially employees from minority
 ----
 **Installation**
 
-Note: this is configuration process is long and fraught with errors due to the nature of Ethereum development! Please reach out if you encounter issues, we may have encountere and resolved the same ones during our development process.
+Note: this configuration process is long and fraught with errors due to the nature of Ethereum development! Please reach out if you encounter issues, we may have encountered and resolved the same ones during our development process.
 
 1. Ensure that the local Node version is 10.16.10 (the truffle library has dependecy issues with Node v12+)
 
@@ -70,3 +70,5 @@ Note: this is configuration process is long and fraught with errors due to the n
 ![Current Employees](https://github.com/equalithonteam13/OpenHire/blob/master/readme/current_employees_screenshot.jpg)
 
 ![Verified Employee Profile](https://github.com/equalithonteam13/OpenHire/blob/master/readme/daphne%20profile.png)
+
+Sample University Page: https://st-francis.herokuapp.com/
