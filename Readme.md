@@ -6,6 +6,7 @@ OpenHire
 ----
 OpenHire is an Ethereum based dapp that that combats imposter syndrome by allowing an employer to better identify skilled employees without unconscious bias. By building on the Ethereum blockchain, OpenHire achieves immutable provenance of an employee's education, work experience, skills, and peer feedback by allowing the requisite party to validate each item. OpenHire then hides all personally identifiable information from an employee's resume page, while still allowing the employer to search by these criteria, reducing the possibility of unconscious bias. Our hope is that OpenHire will enable underrecognized women and minority experts a better opportunity to be discovered by the employer, benefiting all.
 
+![OpenHire Home Page](https://github.com/equalithonteam13/OpenHire/blob/master/readme/current_employees_screenshot.jpg)
 
 ----
 **Nasdaq Challenge #2**
