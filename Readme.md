@@ -46,18 +46,18 @@ Note: this is configuration process is long and fraught with errors due to the n
 6. Download and open up Ganache (https://www.trufflesuite.com/ganache). This is our local test Ethereum network that we will be deploying our smart contract on.
 
 7. In Ganache:
-  - create a new workspace
-  - under the server tab, change the port number to 8545 (this is our local testnet port)
-  - under the accounts & keys tab, copy the mnemonic key (this is how we generate our ethereum address)
-  - save
+    - create a new workspace
+    - under the server tab, change the port number to 8545 (this is our local testnet port)
+    - under the accounts & keys tab, copy the mnemonic key (this is how we generate our ethereum address)
+    - save
 
-8. Create a `.secret` file in your root directory and paste your mnemonic key (this allows the code to deploy our contract with the same address)
+8. Create a `.secret` file in your root directory and paste your mnemonic key from step 7 (this allows the code to deploy our contract with the same address)
 
 9. In the root directory, compile and migrate the contracts using command `truffle migrate` (If you do not have truffle installed globally use "./node_modules/.bin/truffle migrate") to deploy the contracts to the local network.
 
 10. Download Metamask extension for your browser and log in to Metamask (https://metamask.io/) This is an Ethereum address management tool and our interface with the Ethereum blockchain
 
-11. Enter the Ganache seed account (12 word mnemonic from step 6) into metamask.
+11. Enter the Ganache seed account (12 word mnemonic from step 7) into metamask.
 
 12. Change metamask network to localhost 8545. Our test network is deployed to port 8545.
 
